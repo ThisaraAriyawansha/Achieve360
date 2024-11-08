@@ -1,40 +1,43 @@
 <?php
 
+// app/Http/Controllers/Auth/LoginController.php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function login(Request $request)
     {
-        $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
+        // Validate email and password
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        // Attempt to login with provided credentials
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            // Authentication successful
+            $user = Auth::user();
+
+            // Check if user is a super_admin
+            if ($user->role === 'super_admin') {
+                // Redirect to Super Admin Dashboard
+                return redirect()->route('superadmindashboard');
+            }
+
+            // Add additional roles if needed
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->route('user.dashboard'); // Default user route
+        }
+
+        // Authentication failed
+        return back()->withErrors(['loginError' => 'Invalid email or password.']);
     }
 }
