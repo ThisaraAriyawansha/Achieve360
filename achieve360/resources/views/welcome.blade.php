@@ -20,14 +20,14 @@
                 <span class="font-serif">Achieve360</span>
             </a>
             <nav class="hidden space-x-6 md:flex">
-                <a href="#home" class="text-gray-600 hover:text-blue-600">Home</a>
+                <a href="#home" class="text-gray-600 hover:text-blue-600">Dashboard</a>
                 <a href="#about" class="text-gray-600 hover:text-blue-600">About</a>
                 <a href="#courses" class="text-gray-600 hover:text-blue-600">Courses</a>
                 <a href="#contact" class="text-gray-600 hover:text-blue-600">Contact</a>
             </nav>
             <div class="flex space-x-4">
-                <a href="/login" class="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700">Log In</a>
-                <a href="/register" class="px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-md hover:bg-blue-600 hover:text-white">Sign Up</a>
+            <a href="{{ route('login') }}" class="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700">Log In</a>
+            <a href="/register" class="px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-md hover:bg-blue-600 hover:text-white">Sign Up</a>
             </div>
         </div>
     </header>
