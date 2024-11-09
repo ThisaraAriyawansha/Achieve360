@@ -129,9 +129,9 @@
         <div class="w-1/3 p-6 bg-white rounded-lg shadow-lg">
             <h3 class="mb-4 text-lg font-semibold text-gray-700">Select a Role to Register</h3>
             <div class="space-y-4">
-                <button onclick="selectRole('admin')" class="w-full px-4 py-2 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">Admin</button>
-                <button onclick="selectRole('manager')" class="w-full px-4 py-2 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">Manager</button>
                 <button onclick="selectRole('teacher')" class="w-full px-4 py-2 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">Teacher</button>
+                <button onclick="selectRole('student')" class="w-full px-4 py-2 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">Student</button>
+
             </div>
             <button onclick="closeRoleSelectionModal()" class="mt-4 text-blue-600 hover:underline">Cancel</button>
         </div>
