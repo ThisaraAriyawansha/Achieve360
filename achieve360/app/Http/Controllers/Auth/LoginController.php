@@ -23,23 +23,29 @@ class LoginController extends Controller
             // Authentication successful
             $user = Auth::user();
 
-            // Redirect based on user role and pass the user's full name
+            // Redirect based on user role and pass the user's full name and email
+            $data = [
+                'full_name' => $user->full_name,
+                'email' => $user->email
+            ];
+
             if ($user->role === 'super_admin') {
-                return redirect()->route('superadmindashboard')->with('full_name', $user->full_name);
+                return redirect()->route('superadmindashboard')->with($data);
             }
 
             if ($user->role === 'admin') {
-                return redirect()->route('admindashboard')->with('full_name', $user->full_name);
+                return redirect()->route('admindashboard')->with($data);
             }
 
             if ($user->role === 'manager') {
-                return redirect()->route('managerdashboard')->with('full_name', $user->full_name);
+                return redirect()->route('managerdashboard')->with($data);
             }
 
             if ($user->role === 'teacher') {
-                return redirect()->route('teacherdashboard')->with('full_name', $user->full_name);
+                return redirect()->route('teacherdashboard')->with($data);
             }
-            return redirect()->route('user.dashboard')->with('full_name', $user->full_name);
+
+            return redirect()->route('user.dashboard')->with($data);
         }
 
         // Authentication failed

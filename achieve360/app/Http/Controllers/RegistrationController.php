@@ -47,7 +47,7 @@ class RegistrationController extends Controller
         // Auth::login($user);
     
         // Redirect to the dashboard with a success message
-        return redirect()->route('superadmindashboard')->with('success', 'User registered successfully!');
+        return redirect()->route('superadmindashboard')->with('success', 'Registered successfully!');
     }
     
 }
