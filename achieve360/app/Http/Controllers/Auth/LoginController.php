@@ -29,9 +29,16 @@ class LoginController extends Controller
             }
 
             if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard')->with('full_name', $user->full_name);
+                return redirect()->route('admindashboard')->with('full_name', $user->full_name);
             }
 
+            if ($user->role === 'manager') {
+                return redirect()->route('managerdashboard')->with('full_name', $user->full_name);
+            }
+
+            if ($user->role === 'teacher') {
+                return redirect()->route('teacherdashboard')->with('full_name', $user->full_name);
+            }
             return redirect()->route('user.dashboard')->with('full_name', $user->full_name);
         }
 

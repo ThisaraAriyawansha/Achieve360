@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Admin Dashboard</title>
+    <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -13,7 +13,7 @@
         <!-- Sidebar -->
         <aside class="flex flex-col w-64 text-white bg-blue-900">
             <div class="px-6 py-4 text-2xl font-semibold border-b border-blue-800">
-                Super Admin
+                 Admin Dashboard
             </div>
             <nav class="flex-1 p-4 space-y-2 text-base">
                 <a href="#" onclick="showDashboard()" class="block px-4 py-2 transition-all duration-200 bg-blue-800 rounded-lg hover:bg-blue-700">Dashboard</a>
@@ -108,15 +108,14 @@
                             @enderror
                         </div>
 
-                    <!-- Role Field -->
-                    <div>
-                        <label for="role" class="block mb-1 text-sm font-medium text-gray-700">Role</label>
-                        <input type="text" id="role" name="role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" readonly>
-                        @error('role')
-                            <span class="text-sm text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-
+                        <!-- Role Field -->
+                        <div>
+                            <label for="role" class="block mb-1 text-sm font-medium text-gray-700">Role</label>
+                            <input type="text" id="role" name="role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" readonly>
+                            @error('role')
+                                <span class="text-sm text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
 
                         <button type="submit" class="w-full px-4 py-2 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">Register</button>
                     </form>

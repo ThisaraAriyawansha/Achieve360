@@ -24,6 +24,23 @@ Route::get('superadmindashboard', function () {
 })->name('superadmindashboard')->middleware('auth');
 
 
+//  Admin Dashboard
+Route::get('admindashboard', function () {
+    return view('admin_dashboard'); 
+})->name('admindashboard')->middleware('auth');
+
+
+//  Manager Dashboard
+Route::get('managerdashboard', function () {
+    return view('manager_dashboard'); 
+})->name('managerdashboard')->middleware('auth');
+
+//  Teacher Dashboard
+Route::get('teacherdashboard', function () {
+    return view('teacher_dashboard'); 
+})->name('teacherdashboard')->middleware('auth');
+
+
 Route::get('/register', function () {
     return view('register');
 })->name('register');
