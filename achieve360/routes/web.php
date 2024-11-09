@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\RegistrationController;
 
 
 Auth::routes();
@@ -26,3 +27,5 @@ Route::get('superadmindashboard', function () {
 Route::get('/register', function () {
     return view('register');
 })->name('register');
+
+Route::post('/register_member', [RegistrationController::class, 'register']);

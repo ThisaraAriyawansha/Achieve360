@@ -23,18 +23,16 @@ class LoginController extends Controller
             // Authentication successful
             $user = Auth::user();
 
-            // Check if user is a super_admin
+            // Redirect based on user role and pass the user's full name
             if ($user->role === 'super_admin') {
-                // Redirect to Super Admin Dashboard
-                return redirect()->route('superadmindashboard');
+                return redirect()->route('superadmindashboard')->with('full_name', $user->full_name);
             }
 
-            // Add additional roles if needed
             if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dashboard')->with('full_name', $user->full_name);
             }
 
-            return redirect()->route('user.dashboard'); // Default user route
+            return redirect()->route('user.dashboard')->with('full_name', $user->full_name);
         }
 
         // Authentication failed
