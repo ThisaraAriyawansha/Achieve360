@@ -133,6 +133,8 @@
                 <button onclick="selectRole('admin')" class="w-full px-4 py-2 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">Admin</button>
                 <button onclick="selectRole('manager')" class="w-full px-4 py-2 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">Manager</button>
                 <button onclick="selectRole('teacher')" class="w-full px-4 py-2 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">Teacher</button>
+                <button onclick="selectRole('student')" class="w-full px-4 py-2 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700">Student</button>
+
             </div>
             <button onclick="closeRoleSelectionModal()" class="mt-4 text-blue-600 hover:underline">Cancel</button>
         </div>
