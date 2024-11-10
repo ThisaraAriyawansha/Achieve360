@@ -21,6 +21,12 @@
                 <button onclick="showCourseRegistrationForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Add Course</button>
                 <button onclick="openAssignCourseForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Assign Course</button>
 
+                <!-- View and Manage Section -->
+        <button onclick="showManageAdmins()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Admins</button>
+        <button onclick="showManageManagers()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Managers</button>
+        <button onclick="showManageTeachers()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Teachers</button>
+        <button onclick="showManageStudents()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Students</button>
+
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -88,6 +94,120 @@
     </form>
 </section>
 
+
+<!-- Manage Admins Section -->
+<section id="manage-admins" class="hidden">
+    <h3 class="text-2xl font-semibold text-gray-800">Manage Admins</h3>
+    <p class="mt-4 text-gray-700">Here you can view and manage all admins.</p>
+    <div class="mt-4">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Username</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($admins as $admin)
+                    <tr>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->username }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->email }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->full_name }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->status }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Manage Managers Section -->
+<section id="manage-managers" class="hidden">
+    <h3 class="text-2xl font-semibold text-gray-800">Manage Managers</h3>
+    <p class="mt-4 text-gray-700">Here you can view and manage all managers.</p>
+    <div class="mt-4">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Username</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($managers as $manager)
+                    <tr>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->username }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->email }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->full_name }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->status }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Manage Teachers Section -->
+<section id="manage-teachers" class="hidden">
+    <h3 class="text-2xl font-semibold text-gray-800">Manage Teachers</h3>
+    <p class="mt-4 text-gray-700">Here you can view and manage all teachers.</p>
+    <div class="mt-4">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Username</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($teachers as $teacher)
+                    <tr>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->username }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->email }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->full_name }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->status }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Manage Students Section -->
+<section id="manage-students" class="hidden">
+    <h3 class="text-2xl font-semibold text-gray-800">Manage Students</h3>
+    <p class="mt-4 text-gray-700">Here you can view and manage all students.</p>
+    <div class="mt-4">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Username</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($students as $student)
+                    <tr>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $student->username }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $student->email }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $student->full_name }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b">{{ $student->status }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
                 
                 <!-- Registration Form -->
                 <section id="registration-form" class="hidden">
@@ -152,6 +272,11 @@
             document.getElementById('form-title').textContent = `Register New ${role}`;
             document.getElementById('role').value = role;
 
+            document.getElementById('manage-admins').classList.add('hidden');
+            document.getElementById('manage-managers').classList.add('hidden');
+            document.getElementById('manage-teachers').classList.add('hidden');
+            document.getElementById('manage-students').classList.add('hidden');
+
             const qrCodeSection = document.getElementById('qr-code-section');
             if (role === 'student') {
                 qrCodeSection.classList.remove('hidden');
@@ -215,6 +340,10 @@
             document.getElementById('dashboard-content').classList.add('hidden');
             document.getElementById('registration-form').classList.add('hidden');
             document.getElementById('course-registration-form').classList.remove('hidden');
+            document.getElementById('manage-admins').classList.add('hidden');
+            document.getElementById('manage-managers').classList.add('hidden');
+            document.getElementById('manage-teachers').classList.add('hidden');
+            document.getElementById('manage-students').classList.add('hidden');
         }
 
 
@@ -223,6 +352,10 @@
             document.getElementById('assign-course-form').classList.remove('hidden');
             document.getElementById('dashboard-content').classList.add('hidden');
             document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('manage-admins').classList.add('hidden');
+            document.getElementById('manage-managers').classList.add('hidden');
+            document.getElementById('manage-teachers').classList.add('hidden');
+            document.getElementById('manage-students').classList.add('hidden');
 
     // Fetch courses and teachers
     fetchCourses();
@@ -296,6 +429,53 @@ function assignCourse() {
     })
     .catch(error => console.error('Error:', error));
 }
+
+
+// Functions to show and hide the corresponding sections
+function showManageAdmins() {
+    hideAllSections();
+    document.getElementById('manage-admins').classList.remove('hidden');
+    document.getElementById('dashboard-content').classList.add('hidden');
+    document.getElementById('assign-course-form').classList.add('hidden');
+    document.getElementById('course-registration-form').classList.add('hidden');
+     document.getElementById('registration-form').classList.add('hidden');
+}
+
+function showManageManagers() {
+    hideAllSections();
+    document.getElementById('manage-managers').classList.remove('hidden');
+    document.getElementById('dashboard-content').classList.add('hidden');
+    document.getElementById('assign-course-form').classList.add('hidden');
+    document.getElementById('course-registration-form').classList.add('hidden');
+     document.getElementById('registration-form').classList.add('hidden');
+}
+
+function showManageTeachers() {
+    hideAllSections();
+    document.getElementById('manage-teachers').classList.remove('hidden');
+    document.getElementById('dashboard-content').classList.add('hidden');
+    document.getElementById('assign-course-form').classList.add('hidden');
+    document.getElementById('course-registration-form').classList.add('hidden');
+     document.getElementById('registration-form').classList.add('hidden');
+}
+
+function showManageStudents() {
+    hideAllSections();
+    document.getElementById('manage-students').classList.remove('hidden');
+    document.getElementById('dashboard-content').classList.add('hidden');
+    document.getElementById('assign-course-form').classList.add('hidden');
+    document.getElementById('course-registration-form').classList.add('hidden');
+     document.getElementById('registration-form').classList.add('hidden');
+}
+
+// Hide all sections by default
+function hideAllSections() {
+    document.getElementById('manage-admins').classList.add('hidden');
+    document.getElementById('manage-managers').classList.add('hidden');
+    document.getElementById('manage-teachers').classList.add('hidden');
+    document.getElementById('manage-students').classList.add('hidden');
+}
+
     </script>
 </body>
 </html>
