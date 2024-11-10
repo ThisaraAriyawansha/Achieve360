@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controller\ManagerController;
+use App\Http\Controllers\CourseAssignmentController;
 
 
 Auth::routes();
@@ -59,4 +60,5 @@ Route::post('/register_course', [CourseController::class, 'store']);
 Route::get('/api/courses', [CourseController::class, 'index']);
 Route::get('/api/teachers', [CourseController::class, 'teachers']);
 
-Route::post('/assign_course', [CourseAssignmentController::class, 'store']);
+
+Route::post('/assign_course', [CourseAssignmentController::class, 'assignCourse']);

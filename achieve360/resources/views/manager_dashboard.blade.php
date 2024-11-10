@@ -63,19 +63,20 @@
         @csrf
         <div>
             <label class="block mb-1 text-sm font-medium text-gray-700">Select Course</label>
-            <select name="course_id" id="course" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                <!-- Courses will be populated here -->
+            <select id="course" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                <!-- Course options will be populated here -->
             </select>
         </div>
         <div>
             <label class="block mb-1 text-sm font-medium text-gray-700">Select Teacher</label>
-            <select name="teacher_id" id="teacher" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                <!-- Teachers will be populated here -->
+            <select id="teacher" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                <!-- Teacher options will be populated here -->
             </select>
         </div>
-        <button type="submit" class="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Assign Course</button>
+        <button type="button" onclick="assignCourse()" class="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Assign Course</button>
     </form>
 </section>
+
 
                 
                 <!-- Registration Form -->
@@ -205,13 +206,13 @@
 
 
 function fetchCourses() {
-    fetch('/api/courses')  // Endpoint to fetch courses
+    fetch('/api/courses')
         .then(response => response.json())
         .then(data => {
             const courseSelect = document.getElementById('course');
             data.courses.forEach(course => {
                 const option = document.createElement('option');
-                option.value = course.id;
+                option.value = course.name;  // Use course name as the value
                 option.textContent = course.name;
                 courseSelect.appendChild(option);
             });
@@ -220,20 +221,55 @@ function fetchCourses() {
 }
 
 function fetchTeachers() {
-    fetch('/api/teachers')  // Endpoint to fetch teachers
+    fetch('/api/teachers')
         .then(response => response.json())
         .then(data => {
+            console.log('Teacher data:', data); // Check the data structure here
             const teacherSelect = document.getElementById('teacher');
-            Object.entries(data.teachers).forEach(([id, name]) => {
-                const option = document.createElement('option');
-                option.value = id;
-                option.textContent = name;
-                teacherSelect.appendChild(option);
-            });
+
+            // Convert the object to an array of values
+            const teacherNames = Object.values(data.teachers);
+
+            if (Array.isArray(teacherNames)) {
+                teacherNames.forEach(teacherName => {
+                    const option = document.createElement('option');
+                    option.value = teacherName;  // Use teacher name as the value
+                    option.textContent = teacherName;
+                    teacherSelect.appendChild(option);
+                });
+            } else {
+                console.error('Expected an array of teacher names');
+            }
         })
         .catch(error => console.error('Error fetching teachers:', error));
 }
 
+
+
+
+
+function assignCourse() {
+    const courseName = document.getElementById('course').value;
+    const teacherName = document.getElementById('teacher').value;
+
+    fetch('/assign_course', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ course_name: courseName, teacher_name: teacherName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Course assigned successfully');
+        } else {
+            alert('Error assigning course');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
     </script>
 </body>
