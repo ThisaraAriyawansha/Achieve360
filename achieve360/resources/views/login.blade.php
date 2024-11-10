@@ -34,7 +34,7 @@
     </div>
 
     <!-- Back Button -->
-    <button class="absolute px-4 py-2 text-blue-600 transition-all transform bg-white border border-blue-600 rounded-md top-5 left-5 hover:bg-blue-600 hover:text-white hover:scale-105" onclick="goBack()">Back</button>
+    <a href="/" class="absolute px-4 py-2 text-blue-600 transition-all transform bg-white border border-blue-600 rounded-md top-5 left-5 hover:bg-blue-600 hover:text-white hover:scale-105" >Back</a>
     <!-- Main Container -->
     <div class="flex w-full max-w-4xl overflow-hidden bg-white shadow-lg rounded-xl">
         <!-- Left Section -->
@@ -89,9 +89,7 @@
 
     <!-- Tailwind CSS JS (optional for dynamic functionality) -->
     <script>
-        function goBack() {
-            window.history.back();
-        }
+
 
         document.addEventListener('DOMContentLoaded', function() {
             const loadingOverlay = document.getElementById('loadingOverlay');

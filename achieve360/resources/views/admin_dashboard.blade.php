@@ -18,6 +18,7 @@
             <nav class="flex-1 p-4 space-y-2 text-base">
                 <a href="#" onclick="showDashboard()" class="block px-4 py-2 transition-all duration-200 bg-blue-800 rounded-lg hover:bg-blue-700">Dashboard</a>
                 <button onclick="openRoleSelectionModal()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Register</button>
+                <button onclick="showCourseRegistrationForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Add Course</button>
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -52,6 +53,18 @@
                     <p class="mt-4 text-gray-700">Use the sidebar to navigate and manage registrations.</p>
                 </section>
 
+                <!-- Course Registration Form -->
+                <section id="course-registration-form" class="hidden">
+                    <h3 class="mb-4 text-2xl font-semibold text-gray-800">Add Course</h3>
+                    <form id="courseRegistrationForm" class="w-full max-w-md p-6 mx-auto space-y-4 bg-white rounded-lg shadow-lg" method="POST" action="/register_course">
+                        @csrf
+                        <div><label class="block mb-1 text-sm font-medium text-gray-700">Course Name</label><input type="text" name="name" id="course-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></div>
+                        <div><label class="block mb-1 text-sm font-medium text-gray-700">Course Description</label><textarea name="description" id="course-description" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea></div>
+                        <button type="submit" class="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Add Course</button>
+                    </form>
+                </section>                
+
+                
                 <!-- Registration Form -->
                 <section id="registration-form" class="hidden">
                     <h3 id="form-title" class="mb-4 text-2xl font-semibold text-gray-800">Register</h3>
@@ -90,6 +103,8 @@
         function showDashboard() {
             document.getElementById('dashboard-content').classList.remove('hidden');
             document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('course-registration-form').classList.add('hidden');
+
         }
 
         function openRoleSelectionModal() {
@@ -147,6 +162,12 @@
         });
 
 
+
+        function showCourseRegistrationForm() {
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('course-registration-form').classList.remove('hidden');
+        }
+        
 
         document.addEventListener('DOMContentLoaded', function () {
         // Handle success message fade-out after 3 seconds

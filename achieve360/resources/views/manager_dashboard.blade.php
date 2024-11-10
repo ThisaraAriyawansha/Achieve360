@@ -17,7 +17,10 @@
             </div>
             <nav class="flex-1 p-4 space-y-2 text-base">
                 <a href="#" onclick="showDashboard()" class="block px-4 py-2 transition-all duration-200 bg-blue-800 rounded-lg hover:bg-blue-700">Dashboard</a>
+                
                 <button onclick="openRoleSelectionModal()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Register</button>
+                <button onclick="openAssignCourseForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Assign Course</button>
+
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -52,6 +55,29 @@
                     <p class="mt-4 text-gray-700">Use the sidebar to navigate and manage registrations.</p>
                 </section>
 
+
+<!-- Assign Course Form -->
+<section id="assign-course-form" class="hidden">
+    <h3 class="mb-4 text-2xl font-semibold text-gray-800">Assign Course</h3>
+    <form id="assignCourseForm" class="w-full max-w-md p-6 mx-auto space-y-4 bg-white rounded-lg shadow-lg" method="POST" action="/assign_course">
+        @csrf
+        <div>
+            <label class="block mb-1 text-sm font-medium text-gray-700">Select Course</label>
+            <select name="course_id" id="course" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                <!-- Courses will be populated here -->
+            </select>
+        </div>
+        <div>
+            <label class="block mb-1 text-sm font-medium text-gray-700">Select Teacher</label>
+            <select name="teacher_id" id="teacher" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                <!-- Teachers will be populated here -->
+            </select>
+        </div>
+        <button type="submit" class="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Assign Course</button>
+    </form>
+</section>
+
+                
                 <!-- Registration Form -->
                 <section id="registration-form" class="hidden">
                     <h3 id="form-title" class="mb-4 text-2xl font-semibold text-gray-800">Register</h3>
@@ -166,6 +192,49 @@
             }, 3000); // Show for 3 seconds
         }
     });
+
+
+    function openAssignCourseForm() {
+    document.getElementById('assign-course-form').classList.remove('hidden');
+    document.getElementById('dashboard-content').classList.add('hidden');
+    // Fetch courses and teachers
+    fetchCourses();
+    fetchTeachers();
+}
+
+
+
+function fetchCourses() {
+    fetch('/api/courses')  // Endpoint to fetch courses
+        .then(response => response.json())
+        .then(data => {
+            const courseSelect = document.getElementById('course');
+            data.courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.id;
+                option.textContent = course.name;
+                courseSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching courses:', error));
+}
+
+function fetchTeachers() {
+    fetch('/api/teachers')  // Endpoint to fetch teachers
+        .then(response => response.json())
+        .then(data => {
+            const teacherSelect = document.getElementById('teacher');
+            Object.entries(data.teachers).forEach(([id, name]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = name;
+                teacherSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching teachers:', error));
+}
+
+
     </script>
 </body>
 </html>
