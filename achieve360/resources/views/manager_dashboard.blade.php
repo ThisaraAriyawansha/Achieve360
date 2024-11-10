@@ -132,7 +132,10 @@
         }
 
         function showRegistrationForm(role) {
+            
             document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('assign-course-form').classList.add('hidden');
+
             document.getElementById('registration-form').classList.remove('hidden');
             document.getElementById('form-title').textContent = `Register New ${role}`;
             document.getElementById('role').value = role;
@@ -198,6 +201,8 @@
     function openAssignCourseForm() {
     document.getElementById('assign-course-form').classList.remove('hidden');
     document.getElementById('dashboard-content').classList.add('hidden');
+    document.getElementById('registration-form').classList.add('hidden');
+
     // Fetch courses and teachers
     fetchCourses();
     fetchTeachers();
