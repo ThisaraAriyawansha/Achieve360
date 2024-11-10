@@ -1,7 +1,5 @@
 <?php
 
-// app/Http/Controllers/Auth/LoginController.php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -23,12 +21,20 @@ class LoginController extends Controller
             // Authentication successful
             $user = Auth::user();
 
-            // Redirect based on user role and pass the user's full name and email
+            // Check if the user's status is 'inactive'
+            if ($user->status !== 'active') {
+                // If inactive, log out the user and return with an error message
+                Auth::logout();
+                return back()->withErrors(['loginError' => 'Your account is inactive. Please contact support.']);
+            }
+
+            // Prepare the data to be passed to the dashboard routes
             $data = [
                 'full_name' => $user->full_name,
                 'email' => $user->email
             ];
 
+            // Redirect based on user role
             if ($user->role === 'super_admin') {
                 return redirect()->route('superadmindashboard')->with($data);
             }

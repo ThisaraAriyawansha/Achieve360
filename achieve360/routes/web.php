@@ -22,10 +22,10 @@ Route::get('/login', function () {
 })->name('login');
 
 
-// Super Admin Dashboard
-Route::get('superadmindashboard', function () {
-    return view('super_admin_dashboard'); 
-})->name('superadmindashboard')->middleware('auth');
+Route::get('superadmindashboard', [UserController::class, 'showUsersByRole'])
+    ->middleware('auth')
+    ->name('superadmindashboard');
+
 
 
 //  Admin Dashboard
@@ -65,7 +65,7 @@ Route::get('/api/teachers', [CourseController::class, 'teachers']);
 Route::post('/assign_course', [CourseAssignmentController::class, 'assignCourse']);
 
 
-Route::get('/users', [UserController::class, 'showUsersByRole']);
+Route::post('/update_status/{id}', [UserController::class, 'updateStatus']);
 
 
 
