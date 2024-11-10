@@ -18,6 +18,9 @@
             <nav class="flex-1 p-4 space-y-2 text-base">
                 <a href="#" onclick="showDashboard()" class="block px-4 py-2 transition-all duration-200 bg-blue-800 rounded-lg hover:bg-blue-700">Dashboard</a>
                 <button onclick="openRoleSelectionModal()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Register</button>
+                <button onclick="showCourseRegistrationForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Add Course</button>
+                <button onclick="openAssignCourseForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Assign Course</button>
+
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -52,6 +55,40 @@
                     <p class="mt-4 text-gray-700">Use the sidebar to navigate and manage registrations.</p>
                 </section>
 
+
+              <!-- Course Registration Form -->
+                 <section id="course-registration-form" class="hidden">
+                    <h3 class="mb-4 text-2xl font-semibold text-gray-800">Add Course</h3>
+                    <form id="courseRegistrationForm" class="w-full max-w-md p-6 mx-auto space-y-4 bg-white rounded-lg shadow-lg" method="POST" action="/register_course">
+                        @csrf
+                        <div><label class="block mb-1 text-sm font-medium text-gray-700">Course Name</label><input type="text" name="name" id="course-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></div>
+                        <div><label class="block mb-1 text-sm font-medium text-gray-700">Course Description</label><textarea name="description" id="course-description" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea></div>
+                        <button type="submit" class="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Add Course</button>
+                    </form>
+                </section>   
+                
+<!-- Assign Course Form -->
+<section id="assign-course-form" class="hidden">
+    <h3 class="mb-4 text-2xl font-semibold text-gray-800">Assign Course</h3>
+    <form id="assignCourseForm" class="w-full max-w-md p-6 mx-auto space-y-4 bg-white rounded-lg shadow-lg" method="POST" action="/assign_course">
+        @csrf
+        <div>
+            <label class="block mb-1 text-sm font-medium text-gray-700">Select Course</label>
+            <select id="course" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                <!-- Course options will be populated here -->
+            </select>
+        </div>
+        <div>
+            <label class="block mb-1 text-sm font-medium text-gray-700">Select Teacher</label>
+            <select id="teacher" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                <!-- Teacher options will be populated here -->
+            </select>
+        </div>
+        <button type="button" onclick="assignCourse()" class="w-full px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Assign Course</button>
+    </form>
+</section>
+
+                
                 <!-- Registration Form -->
                 <section id="registration-form" class="hidden">
                     <h3 id="form-title" class="mb-4 text-2xl font-semibold text-gray-800">Register</h3>
@@ -108,6 +145,9 @@
 
         function showRegistrationForm(role) {
             document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('assign-course-form').classList.add('hidden');
+
+            document.getElementById('course-registration-form').classList.add('hidden');
             document.getElementById('registration-form').classList.remove('hidden');
             document.getElementById('form-title').textContent = `Register New ${role}`;
             document.getElementById('role').value = role;
@@ -168,6 +208,94 @@
             }, 3000); // Show for 3 seconds
         }
     });
+
+
+    function showCourseRegistrationForm() {
+        document.getElementById('assign-course-form').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('course-registration-form').classList.remove('hidden');
+        }
+
+
+        function openAssignCourseForm() {
+            document.getElementById('course-registration-form').classList.add('hidden');
+            document.getElementById('assign-course-form').classList.remove('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('registration-form').classList.add('hidden');
+
+    // Fetch courses and teachers
+    fetchCourses();
+    fetchTeachers();
+}
+
+
+
+function fetchCourses() {
+    fetch('/api/courses')
+        .then(response => response.json())
+        .then(data => {
+            const courseSelect = document.getElementById('course');
+            data.courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.name;  // Use course name as the value
+                option.textContent = course.name;
+                courseSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching courses:', error));
+}
+
+function fetchTeachers() {
+    fetch('/api/teachers')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Teacher data:', data); // Check the data structure here
+            const teacherSelect = document.getElementById('teacher');
+
+            // Convert the object to an array of values
+            const teacherNames = Object.values(data.teachers);
+
+            if (Array.isArray(teacherNames)) {
+                teacherNames.forEach(teacherName => {
+                    const option = document.createElement('option');
+                    option.value = teacherName;  // Use teacher name as the value
+                    option.textContent = teacherName;
+                    teacherSelect.appendChild(option);
+                });
+            } else {
+                console.error('Expected an array of teacher names');
+            }
+        })
+        .catch(error => console.error('Error fetching teachers:', error));
+}
+
+
+
+
+
+function assignCourse() {
+    const courseName = document.getElementById('course').value;
+    const teacherName = document.getElementById('teacher').value;
+
+    fetch('/assign_course', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ course_name: courseName, teacher_name: teacherName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Course assigned successfully');
+        } else {
+            alert('Error assigning course');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
     </script>
 </body>
 </html>
