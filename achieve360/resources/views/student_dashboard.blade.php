@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard</title>
+    <title>Student Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,7 +13,7 @@
         <!-- Sidebar -->
         <aside class="flex flex-col w-64 text-white bg-blue-900">
             <div class="px-6 py-4 text-2xl font-semibold border-b border-blue-800">
-            Teacher Dashboard
+            Student Dashboard
             </div>
             <nav class="flex-1 p-4 space-y-2 text-base">
                 <a href="#" onclick="showDashboard()" class="block px-4 py-2 transition-all duration-200 bg-blue-800 rounded-lg hover:bg-blue-700">Dashboard</a>

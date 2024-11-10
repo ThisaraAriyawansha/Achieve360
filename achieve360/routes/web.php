@@ -40,6 +40,11 @@ Route::get('teacherdashboard', function () {
     return view('teacher_dashboard'); 
 })->name('teacherdashboard')->middleware('auth');
 
+//  Student Dashboard
+Route::get('studentdashboard', function () {
+    return view('student_dashboard'); 
+})->name('studentdashboard')->middleware('auth');
+
 
 Route::get('/register', function () {
     return view('register');

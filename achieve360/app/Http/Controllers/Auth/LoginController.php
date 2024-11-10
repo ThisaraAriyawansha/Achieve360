@@ -45,6 +45,10 @@ class LoginController extends Controller
                 return redirect()->route('teacherdashboard')->with($data);
             }
 
+            if ($user->role === 'student') {
+                return redirect()->route('studentdashboard')->with($data);
+            }
+
             return redirect()->route('user.dashboard')->with($data);
         }
 
