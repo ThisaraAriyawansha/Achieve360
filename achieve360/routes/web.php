@@ -7,6 +7,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controller\ManagerController;
 use App\Http\Controllers\CourseAssignmentController;
+use App\Http\Controllers\UserController;
 
 
 Auth::routes();
@@ -62,3 +63,6 @@ Route::get('/api/teachers', [CourseController::class, 'teachers']);
 
 
 Route::post('/assign_course', [CourseAssignmentController::class, 'assignCourse']);
+
+
+Route::get('/users', [UserController::class, 'showUsersByRole']);

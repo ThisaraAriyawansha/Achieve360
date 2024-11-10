@@ -16,4 +16,16 @@ class UserController extends Controller
     return response()->json(['teachers' => $teachers]);
 }
 
+public function showUsersByRole()
+{
+    // Fetch users based on role
+    $admins = User::where('role', 'admin')->get();
+    $teachers = User::where('role', 'teacher')->get();
+    $managers = User::where('role', 'manager')->get();
+    $students = User::where('role', 'student')->get();
+
+    // Return the view with the users data
+    return view('super_admin_dashboard', compact('admins', 'teachers', 'managers', 'students'));
+}
+
 }
