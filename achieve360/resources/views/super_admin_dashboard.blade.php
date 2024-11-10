@@ -6,6 +6,8 @@
     <title>Super Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body class="font-sans antialiased bg-gray-100">
@@ -107,6 +109,7 @@
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -115,13 +118,24 @@
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->username }}</td>
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->email }}</td>
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->full_name }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->status }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b" id="status-{{ $admin->id }}">
+                            @if($admin->status === 'active')
+                                <i class="text-green-500 fas fa-lightbulb"></i> Active
+                            @else
+                                <i class="text-red-500 fas fa-lightbulb"></i> Inactive
+                            @endif
+                        </td>
+                        <td class="px-4 py-2 border-b">
+                            <button onclick="updateStatus('{{ $admin->id }}', 'Admin')" class="px-3 py-1 text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 </section>
+
+
 
 <!-- Manage Managers Section -->
 <section id="manage-managers" class="hidden">
@@ -135,6 +149,7 @@
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -143,13 +158,24 @@
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->username }}</td>
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->email }}</td>
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->full_name }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->status }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b" id="status-{{ $manager->id }}">
+                            @if($manager->status === 'active')
+                                <i class="text-green-500 fas fa-lightbulb"></i> Active
+                            @else
+                                <i class="text-red-500 fas fa-lightbulb"></i> Inactive
+                            @endif
+                        </td>
+                        <td class="px-4 py-2 border-b">
+                            <button onclick="updateStatus('{{ $manager->id }}', 'Manager')" class="px-3 py-1 text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 </section>
+
+
 
 <!-- Manage Teachers Section -->
 <section id="manage-teachers" class="hidden">
@@ -163,6 +189,7 @@
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -171,13 +198,24 @@
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->username }}</td>
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->email }}</td>
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->full_name }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->status }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b" id="status-{{ $teacher->id }}">
+                            @if($teacher->status === 'active')
+                                <i class="text-green-500 fas fa-lightbulb"></i> Active
+                            @else
+                                <i class="text-red-500 fas fa-lightbulb"></i> Inactive
+                            @endif
+                        </td>
+                        <td class="px-4 py-2 border-b">
+                            <button onclick="updateStatus('{{ $teacher->id }}', 'Teacher')" class="px-3 py-1 text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 </section>
+
+
 
 <!-- Manage Students Section -->
 <section id="manage-students" class="hidden">
@@ -191,6 +229,7 @@
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
                     <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
+                    <th class="px-4 py-2 text-left text-gray-600 border-b">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -199,13 +238,24 @@
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $student->username }}</td>
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $student->email }}</td>
                         <td class="px-4 py-2 text-gray-800 border-b">{{ $student->full_name }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $student->status }}</td>
+                        <td class="px-4 py-2 text-gray-800 border-b" id="status-{{ $student->id }}">
+                            @if($student->status === 'active')
+                                <i class="text-green-500 fas fa-lightbulb"></i> Active
+                            @else
+                                <i class="text-red-500 fas fa-lightbulb"></i> Inactive
+                            @endif
+                        </td>
+                        <td class="px-4 py-2 border-b">
+                            <button onclick="updateStatus('{{ $student->id }}', 'Student')" class="px-3 py-1 text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 </section>
+
+
 
 
                 
@@ -474,6 +524,34 @@ function hideAllSections() {
     document.getElementById('manage-managers').classList.add('hidden');
     document.getElementById('manage-teachers').classList.add('hidden');
     document.getElementById('manage-students').classList.add('hidden');
+}
+
+
+
+function updateStatus(id, role) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    fetch(`/update_status/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({ status: 'Inactive', role: role })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.message === 'Status updated successfully') {
+            document.getElementById(`status-${id}`).innerText = 'Inactive';
+        } else {
+            alert('Failed to update status');
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
 
     </script>

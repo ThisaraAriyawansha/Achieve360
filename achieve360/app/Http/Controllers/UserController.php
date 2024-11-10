@@ -29,6 +29,19 @@ public function showUsersByRole()
 }
 
 
+public function updateStatus($id, Request $request)
+{
+    try {
+        $user = User::findOrFail($id);
+        $user->status = $request->input('status'); // assuming 'status' is passed in the request
+        $user->save();
+
+        // Return a JSON response
+        return response()->json(['message' => 'Status updated successfully', 'status' => $user->status]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to update status'], 500);
+    }
+}
 
 
 
