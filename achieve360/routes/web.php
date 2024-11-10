@@ -66,3 +66,6 @@ Route::post('/assign_course', [CourseAssignmentController::class, 'assignCourse'
 
 
 Route::get('/users', [UserController::class, 'showUsersByRole']);
+
+
+
