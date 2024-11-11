@@ -36,9 +36,9 @@ public function getAssignedCourses()
 public function deleteAssignedCourse($id)
 {
     // Find the course by ID
-    $course = DB::table('assigned_courses')->where('id', $id)->first();
+    $courses = DB::table('assigned_courses')->where('id', $id)->first();
 
-    if ($course) {
+    if ($courses) {
         // Delete the course
         DB::table('assigned_courses')->where('id', $id)->delete();
         return response()->json(['success' => true]);
@@ -46,6 +46,8 @@ public function deleteAssignedCourse($id)
         return response()->json(['success' => false, 'message' => 'Course not found']);
     }
 }
+
+
 
 
 

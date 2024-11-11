@@ -77,13 +77,13 @@
                 </section>
 
 
-<!-- Course Assignment Section -->
-<section id="course-assignment" class="hidden">
-    <h3 class="mb-4 text-2xl font-semibold text-gray-800">Assigned Courses</h3>
-    <div id="assigned-course-list" class="space-y-4">
-        <!-- Assigned courses will be dynamically loaded here -->
-    </div>
-</section>
+            <!-- Course Assignment Section -->
+            <section id="course-assignment" class="hidden">
+                <h3 class="mb-4 text-2xl font-semibold text-gray-800">Assigned Courses</h3>
+                <div id="assigned-course-list" class="space-y-4">
+                    <!-- Assigned courses will be dynamically loaded here -->
+                </div>
+            </section>
 
 
                 
@@ -127,6 +127,7 @@
             document.getElementById('registration-form').classList.add('hidden');
             document.getElementById('course-registration-form').classList.add('hidden');
             document.getElementById('course-management').classList.add('hidden');
+            document.getElementById('course-assignment').classList.add('hidden');
 
 
         }
@@ -150,6 +151,7 @@
             document.getElementById('form-title').textContent = `Register New ${role}`;
             document.getElementById('role').value = role;
             document.getElementById('course-management').classList.add('hidden');
+            document.getElementById('course-assignment').classList.add('hidden');
 
 
             const qrCodeSection = document.getElementById('qr-code-section');
@@ -193,6 +195,7 @@
             document.getElementById('dashboard-content').classList.add('hidden');
             document.getElementById('course-registration-form').classList.remove('hidden');
             document.getElementById('course-management').classList.add('hidden');
+            document.getElementById('course-assignment').classList.add('hidden');
 
         }
         
@@ -223,6 +226,8 @@
     document.getElementById('registration-form').classList.add('hidden');
     document.getElementById('course-registration-form').classList.add('hidden');
     document.getElementById('course-management').classList.remove('hidden');
+    document.getElementById('course-assignment').classList.add('hidden');
+
 
     // Fetch courses from the server and display them
     fetch('/api/courses') // Assuming the endpoint to get courses is '/api/courses'
@@ -310,19 +315,20 @@ function showCourseAssignment() {
 
 function deleteCourse(courseId) {
     if (confirm('Are you sure you want to delete this course?')) {
-        // Send a DELETE request to the server
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Fetch CSRF token
+
         fetch(`/assigned_courses/${courseId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,  // Include CSRF token
             },
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Reload the course list after successful deletion
-                showCourseAssignment();
+                showCourseAssignment();  // Reload list on success
             } else {
                 alert('Error deleting course. Please try again.');
             }
@@ -330,6 +336,7 @@ function deleteCourse(courseId) {
         .catch(error => console.error('Error deleting course:', error));
     }
 }
+
 
 
     </script>
