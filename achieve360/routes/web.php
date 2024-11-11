@@ -8,6 +8,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controller\ManagerController;
 use App\Http\Controllers\CourseAssignmentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\EnrollmentController;
 
 
 Auth::routes();
@@ -79,3 +80,5 @@ Route::delete('/assigned_courses/{id}', [CourseAssignmentController::class, 'del
 
 
 Route::get('/get-course-details', [CourseAssignmentController::class, 'getCourseDetails'])->name('getCourseDetails');
+
+Route::post('/enroll-course', [EnrollmentController::class, 'enrollInCourse']);
