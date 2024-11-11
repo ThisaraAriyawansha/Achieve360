@@ -28,6 +28,7 @@
         <button onclick="showManageManagers()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Managers</button>
         <button onclick="showManageTeachers()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Teachers</button>
         <button onclick="showManageStudents()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Students</button>
+        <a href="#" onclick="showCourseManagement()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Management</a>
 
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
@@ -256,7 +257,13 @@
 </section>
 
 
-
+                <!-- Course Management Section -->
+                <section id="course-management" class="hidden">
+                    <h3 class="mb-4 text-2xl font-semibold text-gray-800">Course Management</h3>
+                    <div id="course-list" class="space-y-4">
+                        <!-- Courses will be dynamically loaded here -->
+                    </div>
+                </section>
 
                 
                 <!-- Registration Form -->
@@ -296,8 +303,16 @@
 
     <script>
         function showDashboard() {
+            document.getElementById('course-registration-form').classList.add('hidden');
+            document.getElementById('assign-course-form').classList.add('hidden');
             document.getElementById('dashboard-content').classList.remove('hidden');
             document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('manage-admins').classList.add('hidden');
+            document.getElementById('manage-managers').classList.add('hidden');
+            document.getElementById('manage-teachers').classList.add('hidden');
+            document.getElementById('manage-students').classList.add('hidden');
+            document.getElementById('course-management').classList.add('hidden');
+
         }
 
         function openRoleSelectionModal() {
@@ -326,6 +341,9 @@
             document.getElementById('manage-managers').classList.add('hidden');
             document.getElementById('manage-teachers').classList.add('hidden');
             document.getElementById('manage-students').classList.add('hidden');
+            
+            document.getElementById('course-management').classList.add('hidden');
+
 
             const qrCodeSection = document.getElementById('qr-code-section');
             if (role === 'student') {
@@ -394,6 +412,9 @@
             document.getElementById('manage-managers').classList.add('hidden');
             document.getElementById('manage-teachers').classList.add('hidden');
             document.getElementById('manage-students').classList.add('hidden');
+
+            document.getElementById('course-management').classList.add('hidden');
+
         }
 
 
@@ -406,6 +427,9 @@
             document.getElementById('manage-managers').classList.add('hidden');
             document.getElementById('manage-teachers').classList.add('hidden');
             document.getElementById('manage-students').classList.add('hidden');
+
+            document.getElementById('course-management').classList.add('hidden');
+
 
     // Fetch courses and teachers
     fetchCourses();
@@ -489,6 +513,9 @@ function showManageAdmins() {
     document.getElementById('assign-course-form').classList.add('hidden');
     document.getElementById('course-registration-form').classList.add('hidden');
      document.getElementById('registration-form').classList.add('hidden');
+
+     document.getElementById('course-management').classList.add('hidden');
+
 }
 
 function showManageManagers() {
@@ -498,6 +525,9 @@ function showManageManagers() {
     document.getElementById('assign-course-form').classList.add('hidden');
     document.getElementById('course-registration-form').classList.add('hidden');
      document.getElementById('registration-form').classList.add('hidden');
+
+     document.getElementById('course-management').classList.add('hidden');
+
 }
 
 function showManageTeachers() {
@@ -507,6 +537,9 @@ function showManageTeachers() {
     document.getElementById('assign-course-form').classList.add('hidden');
     document.getElementById('course-registration-form').classList.add('hidden');
      document.getElementById('registration-form').classList.add('hidden');
+
+     document.getElementById('course-management').classList.add('hidden');
+
 }
 
 function showManageStudents() {
@@ -516,6 +549,9 @@ function showManageStudents() {
     document.getElementById('assign-course-form').classList.add('hidden');
     document.getElementById('course-registration-form').classList.add('hidden');
      document.getElementById('registration-form').classList.add('hidden');
+
+     document.getElementById('course-management').classList.add('hidden');
+
 }
 
 // Hide all sections by default
@@ -524,6 +560,9 @@ function hideAllSections() {
     document.getElementById('manage-managers').classList.add('hidden');
     document.getElementById('manage-teachers').classList.add('hidden');
     document.getElementById('manage-students').classList.add('hidden');
+
+    document.getElementById('course-management').classList.add('hidden');
+
 }
 
 
@@ -552,6 +591,69 @@ function updateStatus(id, role) {
         }
     })
     .catch(error => console.error('Error:', error));
+}
+
+
+function showCourseManagement() {
+            document.getElementById('course-registration-form').classList.add('hidden');
+            document.getElementById('assign-course-form').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('manage-admins').classList.add('hidden');
+            document.getElementById('manage-managers').classList.add('hidden');
+            document.getElementById('manage-teachers').classList.add('hidden');
+            document.getElementById('manage-students').classList.add('hidden');
+
+            document.getElementById('course-management').classList.remove('hidden');
+
+    // Fetch courses from the server and display them
+    fetch('/api/courses') // Assuming the endpoint to get courses is '/api/courses'
+        .then(response => response.json())
+        .then(data => {
+            const courseList = document.getElementById('course-list');
+            courseList.innerHTML = ''; // Clear existing content
+            data.courses.forEach(course => {
+                const courseItem = document.createElement('div');
+                courseItem.classList.add('p-4', 'bg-white', 'rounded-lg', 'shadow-lg', 'border', 'border-gray-200');
+                courseItem.innerHTML = `
+                    <h4 class="text-xl font-semibold text-gray-800">${course.name}</h4>
+                    <p class="mt-2 text-gray-600">${course.description}</p>
+                    <button onclick="deleteCourse(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
+                `;
+                courseList.appendChild(courseItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching courses:', error);
+        });
+}
+
+function deleteCourse(courseId) {
+    const confirmDelete = confirm('Are you sure you want to delete this course?');
+    if (confirmDelete) {
+        const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
+        fetch(`/api/courses/${courseId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken, // Add CSRF token here
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Course deleted successfully');
+                showCourseManagement(); // Reload the courses list after deletion
+            } else {
+                alert('Failed to delete course');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting course:', error);
+            alert('An error occurred while deleting the course');
+        });
+    }
 }
 
     </script>

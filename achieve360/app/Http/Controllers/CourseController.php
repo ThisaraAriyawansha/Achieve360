@@ -41,4 +41,23 @@ public function teachers()
     return response()->json(['teachers' => $teachers]);
 }
 
+public function getAllCourses()
+{
+    $courses = Course::all(); // Fetch all courses
+    return response()->json(['courses' => $courses]);
+}
+
+public function deleteCourse($id)
+{
+    $course = Course::find($id);
+    
+    if ($course) {
+        $course->delete(); // Delete the course
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false, 'message' => 'Course not found']);
+    }
+}
+
+
 }

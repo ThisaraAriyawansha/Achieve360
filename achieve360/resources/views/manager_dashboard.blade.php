@@ -276,6 +276,53 @@ function assignCourse() {
     .catch(error => console.error('Error:', error));
 }
 
+
+
+const courses = @json($courses);  // Assuming you're passing the courses to the view
+
+function loadCourses() {
+    const coursesList = document.getElementById('courses-list');
+    coursesList.innerHTML = '';  // Clear previous data
+
+    // Populate the courses table
+    courses.forEach(course => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="px-4 py-2">${course.name}</td>
+            <td class="px-4 py-2">${course.description}</td>
+            <td class="px-4 py-2">
+                <button onclick="deleteCourse(${course.id})" class="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
+            </td>
+        `;
+        coursesList.appendChild(row);
+    });
+}
+
+
+function deleteCourse(courseId) {
+    if (confirm("Are you sure you want to delete this course?")) {
+        fetch(`/delete_course/${courseId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Course deleted successfully!");
+                loadCourses();  // Refresh the course list
+            } else {
+                alert("Error deleting course.");
+            }
+        })
+        .catch(error => {
+            alert("Error deleting course.");
+        });
+    }
+}
+
     </script>
 </body>
 </html>

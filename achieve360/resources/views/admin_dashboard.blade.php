@@ -19,6 +19,8 @@
                 <a href="#" onclick="showDashboard()" class="block px-4 py-2 transition-all duration-200 bg-blue-800 rounded-lg hover:bg-blue-700">Dashboard</a>
                 <button onclick="openRoleSelectionModal()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Register</button>
                 <button onclick="showCourseRegistrationForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Add Course</button>
+                <a href="#" onclick="showCourseManagement()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Management</a>
+
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -64,6 +66,15 @@
                     </form>
                 </section>                
 
+
+                <!-- Course Management Section -->
+                <section id="course-management" class="hidden">
+                    <h3 class="mb-4 text-2xl font-semibold text-gray-800">Course Management</h3>
+                    <div id="course-list" class="space-y-4">
+                        <!-- Courses will be dynamically loaded here -->
+                    </div>
+                </section>
+
                 
                 <!-- Registration Form -->
                 <section id="registration-form" class="hidden">
@@ -104,6 +115,8 @@
             document.getElementById('dashboard-content').classList.remove('hidden');
             document.getElementById('registration-form').classList.add('hidden');
             document.getElementById('course-registration-form').classList.add('hidden');
+            document.getElementById('course-management').classList.add('hidden');
+
 
         }
 
@@ -125,6 +138,8 @@
             document.getElementById('registration-form').classList.remove('hidden');
             document.getElementById('form-title').textContent = `Register New ${role}`;
             document.getElementById('role').value = role;
+            document.getElementById('course-management').classList.add('hidden');
+
 
             const qrCodeSection = document.getElementById('qr-code-section');
             if (role === 'student') {
@@ -166,6 +181,8 @@
         function showCourseRegistrationForm() {
             document.getElementById('dashboard-content').classList.add('hidden');
             document.getElementById('course-registration-form').classList.remove('hidden');
+            document.getElementById('course-management').classList.add('hidden');
+
         }
         
 
@@ -188,6 +205,66 @@
             }, 3000); // Show for 3 seconds
         }
     });
+
+
+    function showCourseManagement() {
+    document.getElementById('dashboard-content').classList.add('hidden');
+    document.getElementById('registration-form').classList.add('hidden');
+    document.getElementById('course-registration-form').classList.add('hidden');
+    document.getElementById('course-management').classList.remove('hidden');
+
+    // Fetch courses from the server and display them
+    fetch('/api/courses') // Assuming the endpoint to get courses is '/api/courses'
+        .then(response => response.json())
+        .then(data => {
+            const courseList = document.getElementById('course-list');
+            courseList.innerHTML = ''; // Clear existing content
+            data.courses.forEach(course => {
+                const courseItem = document.createElement('div');
+                courseItem.classList.add('p-4', 'bg-white', 'rounded-lg', 'shadow-lg', 'border', 'border-gray-200');
+                courseItem.innerHTML = `
+                    <h4 class="text-xl font-semibold text-gray-800">${course.name}</h4>
+                    <p class="mt-2 text-gray-600">${course.description}</p>
+                    <button onclick="deleteCourse(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
+                `;
+                courseList.appendChild(courseItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching courses:', error);
+        });
+}
+
+function deleteCourse(courseId) {
+    const confirmDelete = confirm('Are you sure you want to delete this course?');
+    if (confirmDelete) {
+        const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
+        fetch(`/api/courses/${courseId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken, // Add CSRF token here
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Course deleted successfully');
+                showCourseManagement(); // Reload the courses list after deletion
+            } else {
+                alert('Failed to delete course');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting course:', error);
+            alert('An error occurred while deleting the course');
+        });
+    }
+}
+
+
+
     </script>
 </body>
 </html>
