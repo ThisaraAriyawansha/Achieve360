@@ -20,6 +20,7 @@
                 <button onclick="openRoleSelectionModal()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Register</button>
                 <button onclick="showCourseRegistrationForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Add Course</button>
                 <a href="#" onclick="showCourseManagement()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Management</a>
+                <a href="#" onclick="showCourseAssignment()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Assignment</a>
 
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
@@ -74,6 +75,16 @@
                         <!-- Courses will be dynamically loaded here -->
                     </div>
                 </section>
+
+
+<!-- Course Assignment Section -->
+<section id="course-assignment" class="hidden">
+    <h3 class="mb-4 text-2xl font-semibold text-gray-800">Assigned Courses</h3>
+    <div id="assigned-course-list" class="space-y-4">
+        <!-- Assigned courses will be dynamically loaded here -->
+    </div>
+</section>
+
 
                 
                 <!-- Registration Form -->
@@ -263,6 +274,62 @@ function deleteCourse(courseId) {
     }
 }
 
+
+function showCourseAssignment() {
+    document.getElementById('dashboard-content').classList.add('hidden');
+    document.getElementById('registration-form').classList.add('hidden');
+    document.getElementById('course-registration-form').classList.add('hidden');
+    document.getElementById('course-management').classList.add('hidden');
+    document.getElementById('course-assignment').classList.remove('hidden');
+
+    // Fetch the assigned courses from the server
+    fetch('/assigned_courses')  // Your backend route to fetch assigned courses
+        .then(response => response.json())
+        .then(data => {
+            const assignmentList = document.getElementById('assigned-course-list');
+            assignmentList.innerHTML = '';  // Clear existing content
+
+            data.courses.forEach(course => {
+                const courseItem = document.createElement('div');
+                courseItem.classList.add('p-4', 'bg-white', 'rounded-lg', 'shadow-lg', 'border', 'border-gray-300', 'mb-4');
+                courseItem.innerHTML = `
+                    <h4 class="text-lg font-semibold text-gray-800">Course: ${course.course_name}</h4>
+                    <p class="text-sm text-gray-600">Instructor: ${course.teacher_name}</p>
+                    <p class="text-sm text-gray-500">Assigned on: ${new Date(course.assigned_at).toLocaleDateString()}</p>
+                    <p class="text-sm text-gray-400">Created at: ${new Date(course.created_at).toLocaleDateString()}</p>
+                    <p class="text-sm text-gray-400">Updated at: ${new Date(course.updated_at).toLocaleDateString()}</p>
+                    <button onclick="deleteCourse(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-500 rounded-lg hover:bg-red-600">
+                        Delete Course
+                    </button>
+                `;
+                assignmentList.appendChild(courseItem);
+            });
+        })
+        .catch(error => console.error('Error fetching assigned courses:', error));
+}
+
+function deleteCourse(courseId) {
+    if (confirm('Are you sure you want to delete this course?')) {
+        // Send a DELETE request to the server
+        fetch(`/assigned_courses/${courseId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Reload the course list after successful deletion
+                showCourseAssignment();
+            } else {
+                alert('Error deleting course. Please try again.');
+            }
+        })
+        .catch(error => console.error('Error deleting course:', error));
+    }
+}
 
 
     </script>

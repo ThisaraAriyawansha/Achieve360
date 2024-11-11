@@ -23,4 +23,32 @@ class CourseAssignmentController extends Controller
         return response()->json(['success' => true]);
 
     }
+
+public function getAssignedCourses()
+{
+    // Fetch assigned courses (replace with your actual table/model)
+    $assignedCourses = DB::table('assigned_courses')->get();
+    return response()->json(['courses' => $assignedCourses]);
+}
+
+
+
+public function deleteAssignedCourse($id)
+{
+    // Find the course by ID
+    $course = DB::table('assigned_courses')->where('id', $id)->first();
+
+    if ($course) {
+        // Delete the course
+        DB::table('assigned_courses')->where('id', $id)->delete();
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false, 'message' => 'Course not found']);
+    }
+}
+
+
+
+
+
 }
