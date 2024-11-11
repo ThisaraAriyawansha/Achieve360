@@ -82,3 +82,5 @@ Route::delete('/assigned_courses/{id}', [CourseAssignmentController::class, 'del
 Route::get('/get-course-details', [CourseAssignmentController::class, 'getCourseDetails'])->name('getCourseDetails');
 
 Route::post('/enroll-course', [EnrollmentController::class, 'enrollInCourse']);
+
+Route::get('/view-enrolled-courses', [EnrollmentController::class, 'viewEnrolledCourses']);
