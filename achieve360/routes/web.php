@@ -71,3 +71,8 @@ Route::post('/update_status/{id}', [UserController::class, 'updateStatus']);
 Route::get('/api/courses', [CourseController::class, 'getAllCourses']);
 
 Route::delete('/api/courses/{id}', [CourseController::class, 'deleteCourse']);
+
+Route::get('/assigned_courses', [CourseAssignmentController::class, 'getAssignedCourses']);
+
+
+Route::delete('/assigned_courses/{id}', [CourseAssignmentController::class, 'deleteAssignedCourse']);
