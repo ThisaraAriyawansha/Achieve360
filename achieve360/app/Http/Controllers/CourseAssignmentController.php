@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Course;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,6 +49,26 @@ public function deleteAssignedCourse($id)
 }
 
 
+public function getCourseDetails()
+{
+    try {
+        // Join assigned_courses and courses tables to fetch course details
+        $courses = DB::table('assigned_courses')
+            ->join('courses', 'assigned_courses.course_name', '=', 'courses.name') // Correct join condition
+            ->select(
+                'assigned_courses.course_name',
+                'assigned_courses.teacher_name',
+                'courses.description as course_description'
+            )
+            ->get();
+
+        // Ensure it returns a JSON array
+        return response()->json($courses);
+    } catch (\Exception $e) {
+        \Log::error('Error fetching course details: ' . $e->getMessage());
+        return response()->json(['error' => 'Failed to fetch course details'], 500);
+    }
+}
 
 
 
