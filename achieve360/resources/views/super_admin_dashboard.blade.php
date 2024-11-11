@@ -30,7 +30,9 @@
         <button onclick="showManageStudents()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Students</button>
         <a href="#" onclick="showCourseManagement()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Management</a>
         <a href="#" onclick="showCourseAssignment()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Assignment</a>
-
+        <button onclick="showviewEnrolledCourses()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">
+                    View Enrolled Courses
+        </button>
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -670,7 +672,7 @@ function deleteCourse(courseId) {
 
 
 function showCourseAssignment() {
-    document.getElementById('course-registration-form').classList.add('hidden');
+            document.getElementById('course-registration-form').classList.add('hidden');
             document.getElementById('assign-course-form').classList.add('hidden');
             document.getElementById('dashboard-content').classList.add('hidden');
             document.getElementById('registration-form').classList.add('hidden');
@@ -730,6 +732,113 @@ function deleteCourse(courseId) {
         .catch(error => console.error('Error deleting course:', error));
     }
 }
+
+
+
+function showviewEnrolledCourses() {
+            document.getElementById('course-registration-form').classList.add('hidden');
+            document.getElementById('assign-course-form').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('manage-admins').classList.add('hidden');
+            document.getElementById('manage-managers').classList.add('hidden');
+            document.getElementById('manage-teachers').classList.add('hidden');
+            document.getElementById('manage-students').classList.add('hidden');
+            document.getElementById('course-management').classList.add('hidden');
+            document.getElementById('course-assignment').classList.add('hidden');
+
+    // Show the enrolled courses container after fetching data
+    viewEnrolledCourses();
+}
+
+function viewEnrolledCourses() {
+    // Fetch data from server
+    fetch('/view-enrolled-courses-management', {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+    })
+    .then(response => response.json())
+    .then(courses => {
+        let courseContent = `
+            <h3 class="mb-6 text-2xl font-semibold text-gray-800">Your Enrolled Courses</h3>
+            <div class="container px-4 mx-auto" id="enrolled-courses-container">
+                <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+                    <table class="min-w-full table-auto">
+                        <thead class="bg-gray-100">
+                            <tr class="text-left">
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Course Name</th>
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Lecturer Name</th>
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Marks</th>
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Attendance</th>
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Student Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+
+        if (courses.error) {
+            courseContent = `<p class="text-red-500">${courses.error}</p>`;
+        } else {
+            courses.forEach(course => {
+                courseContent += `
+                    <tr class="transition-colors duration-200 border-t hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm text-gray-800">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-indigo-600 fas fa-book-open"></i>
+                                ${course.course_name}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-green-600 fas fa-user-tie"></i>
+                                ${course.teacher_name}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-yellow-500 fas fa-check-circle"></i>
+                                ${course.marks}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-purple-500 fas fa-calendar-check"></i>
+                                ${course.attendance_count}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-blue-500 fas fa-user-graduate"></i>
+                                ${course.full_name}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        courseContent += `
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        `;
+
+        // Populate the content dynamically
+        document.getElementById('dashboard-content').innerHTML = courseContent;
+
+        // Show the 'enrolled-courses-container' now that the content is loaded
+        document.getElementById('enrolled-courses-container').classList.remove('hidden');
+        document.getElementById('dashboard-content').classList.remove('hidden');  // Show the dashboard content section
+    })
+    .catch(error => {
+        console.error('Error fetching enrolled courses:', error);
+        alert('There was an error fetching your enrolled courses.');
+    });
+}
+
 
 
     </script>
