@@ -76,3 +76,6 @@ Route::get('/assigned_courses', [CourseAssignmentController::class, 'getAssigned
 
 
 Route::delete('/assigned_courses/{id}', [CourseAssignmentController::class, 'deleteAssignedCourse']);
+
+
+Route::get('/get-course-details', [CourseAssignmentController::class, 'getCourseDetails'])->name('getCourseDetails');
