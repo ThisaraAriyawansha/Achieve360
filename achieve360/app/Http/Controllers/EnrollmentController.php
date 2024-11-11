@@ -34,4 +34,18 @@ class EnrollmentController extends Controller
             return response()->json(['error' => 'There was an error enrolling in the course. Please try again.'], 500);
         }
     }
+
+    public function viewEnrolledCourses(Request $request)
+    {
+        $studentEmail = $request->user()->email; // Get logged-in student's email
+
+        $enrolledCourses = Enrollment::where('student_email', $studentEmail)->get();
+
+        // Check if courses are found
+        if ($enrolledCourses->isEmpty()) {
+            return response()->json(['error' => 'No enrolled courses found.']);
+        }
+
+        return response()->json($enrolledCourses);
+    }
 }

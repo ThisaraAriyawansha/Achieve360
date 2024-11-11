@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
@@ -19,6 +20,10 @@
             <nav class="flex-1 p-4 space-y-2 text-base">
                 <a href="#" onclick="showDashboard()" class="block px-4 py-2 transition-all duration-200 bg-blue-800 rounded-lg hover:bg-blue-700">Dashboard</a>
                 <button onclick="fetchCourseDetails()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Enroll</button>
+                <button onclick="viewEnrolledCourses()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">
+                    View Enrolled Courses
+                </button>
+
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -30,7 +35,7 @@
                 <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
                 <div class="flex items-center space-x-4">
                     <button class="px-4 py-2 text-blue-600 transition-all duration-200 bg-white border border-blue-600 rounded-lg hover:bg-blue-100">
-                        Welcome, {{ session('full_name') }} ({{session('email')}})
+                        Welcome, {{ session('full_name') }} 
                     </button>
                 </div>
             </header>
@@ -151,6 +156,84 @@ function enrollInCourse(courseName, teacherName) {
     .catch(error => {
         console.error('Error enrolling in course:', error);
         alert('There was an error enrolling in the course. Please try again.');
+    });
+}
+
+
+function viewEnrolledCourses() {
+    fetch('/view-enrolled-courses', {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+    })
+    .then(response => response.json())
+    .then(courses => {
+        let courseContent = `
+            <h3 class="mb-6 text-2xl font-semibold text-gray-800">Your Enrolled Courses</h3>
+            <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+                <table class="min-w-full table-auto">
+                    <thead class="bg-gray-100">
+                        <tr class="text-left">
+                            <th class="px-6 py-3 text-sm font-medium text-gray-600">Course Name</th>
+                            <th class="px-6 py-3 text-sm font-medium text-gray-600">Lecturer</th>
+                            <th class="px-6 py-3 text-sm font-medium text-gray-600">Marks</th>
+                            <th class="px-6 py-3 text-sm font-medium text-gray-600">Attendance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        if (courses.error) {
+            courseContent = `<p class="text-red-500">${courses.error}</p>`;
+        } else {
+            courses.forEach(course => {
+                courseContent += `
+                    <tr class="transition-colors duration-200 border-t hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm text-gray-800">
+                            <div class="flex items-center">
+                                <!-- Course Icon using FontAwesome -->
+                                <i class="mr-2 text-indigo-600 fas fa-book-open"></i>
+                                ${course.course_name}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <!-- Lecturer Icon using FontAwesome -->
+                                <i class="mr-2 text-green-600 fas fa-user-tie"></i>
+                                ${course.teacher_name}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <!-- Marks Icon using FontAwesome -->
+                                <i class="mr-2 text-yellow-500 fas fa-check-circle"></i>
+                                ${course.marks}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <!-- Attendance Icon using FontAwesome -->
+                                <i class="mr-2 text-purple-500 fas fa-calendar-check"></i>
+                                ${course.attendance_count}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        courseContent += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        document.getElementById('dashboard-content').innerHTML = courseContent;
+    })
+    .catch(error => {
+        console.error('Error fetching enrolled courses:', error);
+        alert('There was an error fetching your enrolled courses.');
     });
 }
 
