@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
 </head>
 <body class="font-sans antialiased bg-gray-100">
     <div class="flex h-screen">
@@ -29,7 +30,7 @@
                 <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
                 <div class="flex items-center space-x-4">
                     <button class="px-4 py-2 text-blue-600 transition-all duration-200 bg-white border border-blue-600 rounded-lg hover:bg-blue-100">
-                        Welcome, {{ session('full_name') }}
+                        Welcome, {{ session('full_name') }} ({{session('email')}})
                     </button>
                 </div>
             </header>
@@ -86,7 +87,6 @@
         }
     });
 
-
     function fetchCourseDetails() {
     fetch('/get-course-details')  // Your route to fetch course details
         .then(response => response.json())
@@ -98,10 +98,13 @@
 
             courses.forEach(course => {
                 courseContent += `
-                    <div class="p-4 bg-white rounded-lg shadow-md">
+                    <div class="p-4 transition-shadow duration-200 bg-white rounded-lg shadow-md hover:shadow-lg">
                         <h4 class="text-xl font-semibold text-blue-800">${course.course_name}</h4>
                         <p class="text-gray-700"><strong>Lecturer:</strong> ${course.teacher_name}</p>
                         <p class="text-gray-700"><strong>Description:</strong> ${course.course_description}</p>
+                        <button onclick="enrollInCourse('${course.course_name}', '${course.teacher_name}')" class="px-6 py-2 mt-4 text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                            Enroll
+                        </button>
                     </div>
                 `;
             });
@@ -111,6 +114,48 @@
         })
         .catch(error => console.error('Error fetching course details:', error));
 }
+
+
+function enrollInCourse(courseName, teacherName) {
+    const studentEmail = '{{ session("email") }}';  // Assuming session holds email information
+
+    if (!studentEmail) {
+        alert("You must be logged in to enroll.");
+        return;
+    }
+
+    const enrollmentData = {
+        student_email: studentEmail,
+        course_name: courseName,
+        teacher_name: teacherName,
+    };
+
+    fetch('/enroll-course', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify(enrollmentData),
+    })
+    .then(response => response.json())  // Ensure the response is parsed as JSON
+    .then(data => {
+        if (data.message) {
+            alert(data.message); // Show success message from the server
+        } else if (data.error) {
+            alert(data.error); // Show error message from the server
+        } else {
+            alert('Unknown error occurred');
+        }
+    })
+    .catch(error => {
+        console.error('Error enrolling in course:', error);
+        alert('There was an error enrolling in the course. Please try again.');
+    });
+}
+
+
+
 
     </script>
 </body>
