@@ -176,7 +176,7 @@ function viewEnrolledCourses() {
                     <thead class="bg-gray-100">
                         <tr class="text-left">
                             <th class="px-6 py-3 text-sm font-medium text-gray-600">Course Name</th>
-                            <th class="px-6 py-3 text-sm font-medium text-gray-600">Lecturer</th>
+                            <th class="px-6 py-3 text-sm font-medium text-gray-600">Lecturer Name</th>
                             <th class="px-6 py-3 text-sm font-medium text-gray-600">Marks</th>
                             <th class="px-6 py-3 text-sm font-medium text-gray-600">Attendance</th>
                         </tr>

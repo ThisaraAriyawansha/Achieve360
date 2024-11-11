@@ -48,4 +48,22 @@ class EnrollmentController extends Controller
 
         return response()->json($enrolledCourses);
     }
+
+    public function viewEnrolledCoursesManagement(Request $request)
+    {
+        // Fetch all enrolled courses with the student's full name
+        $enrolledCourses = Enrollment::join('users', 'enrollments.student_email', '=', 'users.email')
+            ->select('enrollments.course_name', 'enrollments.teacher_name', 'enrollments.marks', 'enrollments.attendance_count', 'users.full_name')
+            ->get();
+    
+        // Check if courses are found
+        if ($enrolledCourses->isEmpty()) {
+            return response()->json(['error' => 'No enrolled courses found.']);
+        }
+    
+        // Return the courses with full name of the student
+        return response()->json($enrolledCourses);
+    }
+    
+    
 }
