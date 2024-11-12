@@ -745,7 +745,7 @@ function viewEnrolledCourses() {
     .then(response => response.json())
     .then(courses => {
         let courseContent = `
-            <h3 class="mb-6 text-2xl font-semibold text-gray-800">Your Enrolled Courses</h3>
+            <h3 class="mb-6 text-2xl font-semibold text-gray-800">Enrolled Courses</h3>
             <div class="container px-4 mx-auto" id="enrolled-courses-container">
                 <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
                     <table class="min-w-full table-auto">
