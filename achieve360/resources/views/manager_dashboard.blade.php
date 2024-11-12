@@ -22,13 +22,9 @@
                 <button onclick="openRoleSelectionModal()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Register</button>
                 <button onclick="showCourseRegistrationForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Add Course</button>
                 <button onclick="openAssignCourseForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Assign Course</button>
-        <button onclick="showManageTeachers()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Teachers</button>
-        <button onclick="showManageStudents()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Manage Students</button>
-        <a href="#" onclick="showCourseManagement()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Management</a>
-        <a href="#" onclick="showCourseAssignment()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Assignment</a>
-        <button onclick="showviewEnrolledCourses()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">
-                    View Enrolled Courses
-        </button>
+                    <button onclick="showviewEnrolledCourses()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">
+                                View Enrolled Courses
+                    </button>
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -97,163 +93,6 @@
 </section>
 
 
-<!-- Manage Admins Section -->
-<section id="manage-admins" class="hidden">
-    <h3 class="text-2xl font-semibold text-gray-800">Manage Admins</h3>
-    <p class="mt-4 text-gray-700">Here you can view and manage all admins.</p>
-    <div class="mt-4">
-        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Username</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($admins as $admin)
-                    <tr>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->username }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->email }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $admin->full_name }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b" id="status-{{ $admin->id }}">
-                            @if($admin->status === 'active')
-                                <i class="text-green-500 fas fa-lightbulb"></i> Active
-                            @else
-                                <i class="text-red-500 fas fa-lightbulb"></i> Inactive
-                            @endif
-                        </td>
-                        <td class="px-4 py-2 border-b">
-                            <button onclick="updateStatus('{{ $admin->id }}', 'Admin')" class="px-3 py-1 text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</section>
-
-
-
-<!-- Manage Managers Section -->
-<section id="manage-managers" class="hidden">
-    <h3 class="text-2xl font-semibold text-gray-800">Manage Managers</h3>
-    <p class="mt-4 text-gray-700">Here you can view and manage all managers.</p>
-    <div class="mt-4">
-        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Username</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($managers as $manager)
-                    <tr>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->username }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->email }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $manager->full_name }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b" id="status-{{ $manager->id }}">
-                            @if($manager->status === 'active')
-                                <i class="text-green-500 fas fa-lightbulb"></i> Active
-                            @else
-                                <i class="text-red-500 fas fa-lightbulb"></i> Inactive
-                            @endif
-                        </td>
-                        <td class="px-4 py-2 border-b">
-                            <button onclick="updateStatus('{{ $manager->id }}', 'Manager')" class="px-3 py-1 text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</section>
-
-
-
-<!-- Manage Teachers Section -->
-<section id="manage-teachers" class="hidden">
-    <h3 class="text-2xl font-semibold text-gray-800">Manage Teachers</h3>
-    <p class="mt-4 text-gray-700">Here you can view and manage all teachers.</p>
-    <div class="mt-4">
-        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Username</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($teachers as $teacher)
-                    <tr>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->username }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->email }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $teacher->full_name }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b" id="status-{{ $teacher->id }}">
-                            @if($teacher->status === 'active')
-                                <i class="text-green-500 fas fa-lightbulb"></i> Active
-                            @else
-                                <i class="text-red-500 fas fa-lightbulb"></i> Inactive
-                            @endif
-                        </td>
-                        <td class="px-4 py-2 border-b">
-                            <button onclick="updateStatus('{{ $teacher->id }}', 'Teacher')" class="px-3 py-1 text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</section>
-
-
-
-<!-- Manage Students Section -->
-<section id="manage-students" class="hidden">
-    <h3 class="text-2xl font-semibold text-gray-800">Manage Students</h3>
-    <p class="mt-4 text-gray-700">Here you can view and manage all students.</p>
-    <div class="mt-4">
-        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Username</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Email</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Full Name</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Status</th>
-                    <th class="px-4 py-2 text-left text-gray-600 border-b">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($students as $student)
-                    <tr>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $student->username }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $student->email }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b">{{ $student->full_name }}</td>
-                        <td class="px-4 py-2 text-gray-800 border-b" id="status-{{ $student->id }}">
-                            @if($student->status === 'active')
-                                <i class="text-green-500 fas fa-lightbulb"></i> Active
-                            @else
-                                <i class="text-red-500 fas fa-lightbulb"></i> Inactive
-                            @endif
-                        </td>
-                        <td class="px-4 py-2 border-b">
-                            <button onclick="updateStatus('{{ $student->id }}', 'Student')" class="px-3 py-1 text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</section>
 
 
                 <!-- Course Management Section -->
@@ -321,7 +160,9 @@
             document.getElementById('manage-students').classList.add('hidden');
             document.getElementById('course-management').classList.add('hidden');
             document.getElementById('course-assignment').classList.add('hidden');
-
+            document.getElementById('enrolled-courses-container').classList.add('hidden');
+            hideAllSections();
+            
 
         }
 
@@ -498,54 +339,7 @@ function assignCourse() {
 }
 
 
-// Functions to show and hide the corresponding sections
-function showManageAdmins() {
-    hideAllSections();
-    document.getElementById('manage-admins').classList.remove('hidden');
-    document.getElementById('dashboard-content').classList.add('hidden');
-    document.getElementById('assign-course-form').classList.add('hidden');
-    document.getElementById('course-registration-form').classList.add('hidden');
-     document.getElementById('registration-form').classList.add('hidden');
-     document.getElementById('course-assignment').classList.add('hidden');
-     document.getElementById('course-management').classList.add('hidden');
 
-}
-
-function showManageManagers() {
-    hideAllSections();
-    document.getElementById('manage-managers').classList.remove('hidden');
-    document.getElementById('dashboard-content').classList.add('hidden');
-    document.getElementById('assign-course-form').classList.add('hidden');
-    document.getElementById('course-registration-form').classList.add('hidden');
-     document.getElementById('registration-form').classList.add('hidden');
-     document.getElementById('course-assignment').classList.add('hidden');
-     document.getElementById('course-management').classList.add('hidden');
-
-}
-
-function showManageTeachers() {
-    hideAllSections();
-    document.getElementById('manage-teachers').classList.remove('hidden');
-    document.getElementById('dashboard-content').classList.add('hidden');
-    document.getElementById('assign-course-form').classList.add('hidden');
-    document.getElementById('course-registration-form').classList.add('hidden');
-     document.getElementById('registration-form').classList.add('hidden');
-     document.getElementById('course-assignment').classList.add('hidden');
-     document.getElementById('course-management').classList.add('hidden');
-
-}
-
-function showManageStudents() {
-    hideAllSections();
-    document.getElementById('manage-students').classList.remove('hidden');
-    document.getElementById('dashboard-content').classList.add('hidden');
-    document.getElementById('assign-course-form').classList.add('hidden');
-    document.getElementById('course-registration-form').classList.add('hidden');
-     document.getElementById('registration-form').classList.add('hidden');
-     document.getElementById('course-assignment').classList.add('hidden');
-     document.getElementById('course-management').classList.add('hidden');
-
-}
 
 // Hide all sections by default
 function hideAllSections() {
@@ -611,7 +405,7 @@ function showCourseManagement() {
                 courseItem.innerHTML = `
                     <h4 class="text-xl font-semibold text-gray-800">${course.name}</h4>
                     <p class="mt-2 text-gray-600">${course.description}</p>
-                    <button onclick="deleteCourse(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
+                    <button onclick="deleteCourses(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
                 `;
                 courseList.appendChild(courseItem);
             });
@@ -621,7 +415,7 @@ function showCourseManagement() {
         });
 }
 
-function deleteCourse(courseId) {
+function deleteCourses(courseId) {
     const confirmDelete = confirm('Are you sure you want to delete this course?');
     if (confirmDelete) {
         const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
@@ -713,20 +507,24 @@ function deleteCourse(courseId) {
 
 
 function showviewEnrolledCourses() {
-            document.getElementById('course-registration-form').classList.add('hidden');
-            document.getElementById('assign-course-form').classList.add('hidden');
-            document.getElementById('dashboard-content').classList.add('hidden');
-            document.getElementById('registration-form').classList.add('hidden');
-            document.getElementById('manage-admins').classList.add('hidden');
-            document.getElementById('manage-managers').classList.add('hidden');
-            document.getElementById('manage-teachers').classList.add('hidden');
-            document.getElementById('manage-students').classList.add('hidden');
-            document.getElementById('course-management').classList.add('hidden');
-            document.getElementById('course-assignment').classList.add('hidden');
+    // Hide all sections by adding 'hidden' class
+    const sectionsToHide = [
+        'course-registration-form', 
+        'assign-course-form', 
+        'dashboard-content', 
+        'registration-form', 
+        'course-management', 
+        'course-assignment'
+    ];
+    
+    sectionsToHide.forEach(section => {
+        document.getElementById(section).classList.add('hidden');
+    });
 
     // Show the enrolled courses container after fetching data
     viewEnrolledCourses();
 }
+
 
 function viewEnrolledCourses() {
     // Fetch data from server
@@ -816,6 +614,42 @@ function viewEnrolledCourses() {
     });
 }
 
+
+        function showCourseRegistrationForm() {
+            document.getElementById('course-registration-form').classList.remove('hidden');
+            document.getElementById('assign-course-form').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('manage-admins').classList.add('hidden');
+            document.getElementById('manage-managers').classList.add('hidden');
+            document.getElementById('manage-teachers').classList.add('hidden');
+            document.getElementById('manage-students').classList.add('hidden');
+            document.getElementById('course-management').classList.add('hidden');
+            document.getElementById('course-assignment').classList.add('hidden');
+            document.getElementById('enrolled-courses-container').classList.add('hidden');
+
+        }
+        
+
+        document.addEventListener('DOMContentLoaded', function () {
+        // Handle success message fade-out after 3 seconds
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            setTimeout(() => {
+                successMessage.classList.add('opacity-0'); // Fade out
+                successMessage.classList.remove('opacity-100');
+            }, 3000); // Show for 3 seconds
+        }
+
+        // Handle error message fade-out after 3 seconds
+        const errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+            setTimeout(() => {
+                errorMessage.classList.add('opacity-0'); // Fade out
+                errorMessage.classList.remove('opacity-100');
+            }, 3000); // Show for 3 seconds
+        }
+    });
 
 
     </script>

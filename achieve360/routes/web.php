@@ -36,10 +36,10 @@ Route::get('admindashboard', function () {
 
 
 //  Manager Dashboard
+Route::get('managerdashboard', function () {
+    return view('manager_dashboard'); 
+})->name('managerdashboard')->middleware('auth');
 
-Route::get('managerdashboard', [UserController::class, 'showUsersByRole'])
-    ->middleware('auth')
-    ->name('managerdashboard');
 
 //  Teacher Dashboard
 Route::get('teacherdashboard', function () {
