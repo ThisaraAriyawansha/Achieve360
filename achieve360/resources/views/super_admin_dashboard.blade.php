@@ -325,7 +325,9 @@
             document.getElementById('manage-students').classList.add('hidden');
             document.getElementById('course-management').classList.add('hidden');
             document.getElementById('course-assignment').classList.add('hidden');
-
+            document.getElementById('enrolled-courses-container').classList.add('hidden');
+            hideAllSections();
+            
 
         }
 
@@ -417,19 +419,7 @@
     });
 
 
-    function showCourseRegistrationForm() {
-        document.getElementById('assign-course-form').classList.add('hidden');
-            document.getElementById('dashboard-content').classList.add('hidden');
-            document.getElementById('registration-form').classList.add('hidden');
-            document.getElementById('course-registration-form').classList.remove('hidden');
-            document.getElementById('manage-admins').classList.add('hidden');
-            document.getElementById('manage-managers').classList.add('hidden');
-            document.getElementById('manage-teachers').classList.add('hidden');
-            document.getElementById('manage-students').classList.add('hidden');
-            document.getElementById('course-assignment').classList.add('hidden');
-            document.getElementById('course-management').classList.add('hidden');
 
-        }
 
 
         function openAssignCourseForm() {
@@ -437,12 +427,7 @@
             document.getElementById('assign-course-form').classList.remove('hidden');
             document.getElementById('dashboard-content').classList.add('hidden');
             document.getElementById('registration-form').classList.add('hidden');
-            document.getElementById('manage-admins').classList.add('hidden');
-            document.getElementById('manage-managers').classList.add('hidden');
-            document.getElementById('manage-teachers').classList.add('hidden');
-            document.getElementById('manage-students').classList.add('hidden');
-            document.getElementById('course-assignment').classList.add('hidden');
-            document.getElementById('course-management').classList.add('hidden');
+
 
 
     // Fetch courses and teachers
@@ -632,7 +617,7 @@ function showCourseManagement() {
                 courseItem.innerHTML = `
                     <h4 class="text-xl font-semibold text-gray-800">${course.name}</h4>
                     <p class="mt-2 text-gray-600">${course.description}</p>
-                    <button onclick="deleteCourse(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
+                    <button onclick="deleteCourses(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
                 `;
                 courseList.appendChild(courseItem);
             });
@@ -642,7 +627,7 @@ function showCourseManagement() {
         });
 }
 
-function deleteCourse(courseId) {
+function deleteCourses(courseId) {
     const confirmDelete = confirm('Are you sure you want to delete this course?');
     if (confirmDelete) {
         const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
@@ -837,6 +822,42 @@ function viewEnrolledCourses() {
     });
 }
 
+
+        function showCourseRegistrationForm() {
+            document.getElementById('course-registration-form').classList.remove('hidden');
+            document.getElementById('assign-course-form').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('manage-admins').classList.add('hidden');
+            document.getElementById('manage-managers').classList.add('hidden');
+            document.getElementById('manage-teachers').classList.add('hidden');
+            document.getElementById('manage-students').classList.add('hidden');
+            document.getElementById('course-management').classList.add('hidden');
+            document.getElementById('course-assignment').classList.add('hidden');
+            document.getElementById('enrolled-courses-container').classList.add('hidden');
+
+        }
+        
+
+        document.addEventListener('DOMContentLoaded', function () {
+        // Handle success message fade-out after 3 seconds
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            setTimeout(() => {
+                successMessage.classList.add('opacity-0'); // Fade out
+                successMessage.classList.remove('opacity-100');
+            }, 3000); // Show for 3 seconds
+        }
+
+        // Handle error message fade-out after 3 seconds
+        const errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+            setTimeout(() => {
+                errorMessage.classList.add('opacity-0'); // Fade out
+                errorMessage.classList.remove('opacity-100');
+            }, 3000); // Show for 3 seconds
+        }
+    });
 
 
     </script>

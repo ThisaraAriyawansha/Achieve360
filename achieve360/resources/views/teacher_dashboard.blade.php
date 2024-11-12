@@ -109,6 +109,7 @@
             document.getElementById('dashboard-content').classList.remove('hidden');
             document.getElementById('registration-form').classList.add('hidden');
             document.getElementById('enrollments-section').classList.add('hidden');
+            document.getElementById('enrollments-mark').classList.add('hidden');
 
         }
 
@@ -131,6 +132,7 @@
             document.getElementById('registration-form').classList.remove('hidden');
             document.getElementById('form-title').textContent = `Register New ${role}`;
             document.getElementById('role').value = role;
+            document.getElementById('enrollments-mark').classList.add('hidden');
 
             const qrCodeSection = document.getElementById('qr-code-section');
             if (role === 'student') {
@@ -194,6 +196,7 @@
     // Hide other sections
     document.getElementById('dashboard-content').classList.add('hidden');
     document.getElementById('registration-form').classList.add('hidden');
+    document.getElementById('enrollments-mark').classList.add('hidden');
 
     // Show enrollments section
     document.getElementById('enrollments-section').classList.remove('hidden');
