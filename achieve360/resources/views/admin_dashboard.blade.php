@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -23,8 +24,10 @@
                 <button onclick="showCourseRegistrationForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Add Course</button>
                 <a href="#" onclick="showCourseManagement()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Management</a>
                 <a href="#" onclick="showCourseAssignment()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Assignment</a>
-                <button onclick="showAttendanceManagement()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Attendance Management</button>
-
+                <button onclick="showAttendanceManagement()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Attendance Management</button>
+                <button onclick="showviewEnrolledCourses()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">
+                                View Attendance
+                    </button>
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -152,12 +155,12 @@
 
     <script>
         function showDashboard() {
+
+            document.getElementById('course-registration-form').classList.add('hidden');
             document.getElementById('dashboard-content').classList.remove('hidden');
             document.getElementById('registration-form').classList.add('hidden');
-            document.getElementById('course-registration-form').classList.add('hidden');
             document.getElementById('course-management').classList.add('hidden');
             document.getElementById('course-assignment').classList.add('hidden');
-
 
         }
 
@@ -181,6 +184,8 @@
             document.getElementById('role').value = role;
             document.getElementById('course-management').classList.add('hidden');
             document.getElementById('course-assignment').classList.add('hidden');
+            document.getElementById("attendanceForm").style.display = "none";
+
 
 
             const qrCodeSection = document.getElementById('qr-code-section');
@@ -225,6 +230,10 @@
             document.getElementById('course-registration-form').classList.remove('hidden');
             document.getElementById('course-management').classList.add('hidden');
             document.getElementById('course-assignment').classList.add('hidden');
+            document.getElementById("attendanceForm").style.display = "none";
+            document.getElementById('registration-form').classList.add('hidden');
+
+
 
         }
         
@@ -258,6 +267,8 @@ function showCourseManagement() {
     document.getElementById('course-registration-form').classList.add('hidden');
     document.getElementById('course-management').classList.remove('hidden');
     document.getElementById('course-assignment').classList.add('hidden');
+    document.getElementById("attendanceForm").style.display = "none";
+
 
     // Fetch courses from the server and display them
     fetch('/api/courses') // Assuming the endpoint to get courses is '/api/courses'
@@ -318,6 +329,8 @@ function showCourseAssignment() {
     document.getElementById('course-registration-form').classList.add('hidden');
     document.getElementById('course-management').classList.add('hidden');
     document.getElementById('course-assignment').classList.remove('hidden');
+    document.getElementById("attendanceForm").style.display = "none";
+
 
     // Fetch the assigned courses from the server
     fetch('/assigned_courses')  // Your backend route to fetch assigned courses
@@ -474,8 +487,108 @@ function showAttendanceManagement() {
             }
         });
     }
-</script>
 
+    
+
+    function showviewEnrolledCourses() {
+            document.getElementById('course-registration-form').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('registration-form').classList.add('hidden');
+
+            document.getElementById('course-management').classList.add('hidden');
+            document.getElementById('course-assignment').classList.add('hidden');
+
+    // Show the enrolled courses container after fetching data
+    viewEnrolledCourses();
+}
+
+function viewEnrolledCourses() {
+    // Fetch data from server
+    fetch('/view-enrolled-courses-management', {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+    })
+    .then(response => response.json())
+    .then(courses => {
+        let courseContent = `
+            <h3 class="mb-6 text-2xl font-semibold text-gray-800">Enrolled Courses</h3>
+            <div class="container px-4 mx-auto" id="enrolled-courses-container">
+                <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+                    <table class="min-w-full table-auto">
+                        <thead class="bg-gray-100">
+                            <tr class="text-left">
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Course Name</th>
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Lecturer Name</th>
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Marks</th>
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Attendance</th>
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Student Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+
+        if (courses.error) {
+            courseContent = `<p class="text-red-500">${courses.error}</p>`;
+        } else {
+            courses.forEach(course => {
+                courseContent += `
+                    <tr class="transition-colors duration-200 border-t hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm text-gray-800">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-indigo-600 fas fa-book-open"></i>
+                                ${course.course_name}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-green-600 fas fa-user-tie"></i>
+                                ${course.teacher_name}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-yellow-500 fas fa-check-circle"></i>
+                                ${course.marks}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-purple-500 fas fa-calendar-check"></i>
+                                ${course.attendance_count}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <i class="mr-2 text-blue-500 fas fa-user-graduate"></i>
+                                ${course.full_name}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        courseContent += `
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        `;
+
+        // Populate the content dynamically
+        document.getElementById('dashboard-content').innerHTML = courseContent;
+
+        // Show the 'enrolled-courses-container' now that the content is loaded
+        document.getElementById('enrolled-courses-container').classList.remove('hidden');
+        document.getElementById('dashboard-content').classList.remove('hidden');  // Show the dashboard content section
+    })
+    .catch(error => {
+        console.error('Error fetching enrolled courses:', error);
+        alert('There was an error fetching your enrolled courses.');
+    });
+}
 
 
 
