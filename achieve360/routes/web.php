@@ -89,3 +89,8 @@ Route::get('/view-enrolled-courses-management', [EnrollmentController::class, 'v
 
 
 Route::get('/api/enrollments', [EnrollmentController::class, 'getEnrollments']);
+
+
+Route::get('/api/enrollmentsmarks', [EnrollmentController::class, 'getEnrollmentsMarks']);
+Route::put('/api/enrollmentsmarks/{id}/update-marks', [EnrollmentController::class, 'updateMarks']);
+
