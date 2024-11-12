@@ -95,3 +95,9 @@ Route::get('/api/enrollments', [EnrollmentController::class, 'getEnrollments']);
 Route::get('/api/enrollmentsmarks', [EnrollmentController::class, 'getEnrollmentsMarks']);
 Route::put('/api/enrollmentsmarks/{id}/update-marks', [EnrollmentController::class, 'updateMarks']);
 
+Route::post('/mark-attendance', [EnrollmentController::class, 'markAttendance'])->name('mark.attendance');
+
+
+
+Route::get('/api/student/courses', [EnrollmentController::class, 'getStudentCourses']);
+Route::post('/api/attendance/mark/{courseId}', [EnrollmentController::class, 'markAttendance']);

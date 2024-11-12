@@ -6,6 +6,8 @@
     <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body class="font-sans antialiased bg-gray-100">
@@ -21,6 +23,7 @@
                 <button onclick="showCourseRegistrationForm()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Add Course</button>
                 <a href="#" onclick="showCourseManagement()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Management</a>
                 <a href="#" onclick="showCourseAssignment()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Course Assignment</a>
+                <button onclick="showAttendanceManagement()" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Attendance Management</button>
 
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
@@ -48,6 +51,7 @@
                 </div>
             @endif
 
+            
             <!-- Dynamic Content Area -->
             <main class="flex-1 p-6 overflow-y-auto bg-gray-100">
                 <!-- Dashboard Content -->
@@ -85,6 +89,31 @@
                 </div>
             </section>
 
+
+
+<!-- QR Code Reader (Initially Hidden) -->
+<div id="qr-reader-container" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-blue-900 bg-opacity-50">
+    <div class="w-full p-6 bg-white rounded-lg shadow-xl sm:w-96">
+        <div id="qr-reader" class="w-full mb-4 h-80"></div>
+        <button onclick="closeQRCodeScanner()" class="w-full px-6 py-2 text-white transition duration-300 bg-blue-600 rounded-lg shadow-md hover:bg-blue-500">
+            Close Scanner
+        </button>
+    </div>
+</div>
+
+<!-- Attendance Form Section (Initially Hidden) -->
+<div id="attendanceForm" class="hidden w-full p-8 mx-auto mt-10 bg-white rounded-lg shadow-lg sm:w-96">
+    <label for="studentEmail" class="block mb-2 text-lg font-semibold text-gray-700">Student Email:</label>
+    <input type="email" id="studentEmail" placeholder="Enter Student Email" class="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" readonly>
+
+    <button onclick="loadStudentCourses()" class="w-full px-6 py-3 text-white transition duration-300 bg-blue-700 rounded-lg shadow-md hover:bg-blue-600">
+        Load Courses
+    </button>
+
+    <div id="coursesList" class="mt-6 space-y-4">
+        <!-- This will be populated dynamically with courses -->
+    </div>
+</div>
 
                 
                 <!-- Registration Form -->
@@ -338,6 +367,115 @@ function deleteCourse(courseId) {
         .catch(error => console.error('Error deleting course:', error));
     }
 }
+
+
+function showAttendanceManagement() {
+        // Show QR code scanner
+        document.getElementById("qr-reader-container").style.display = "block";
+        document.getElementById("attendanceForm").style.display = "none";
+        
+        // Start scanning QR code
+        startQRCodeScanner();
+    }
+
+    // Function to start QR code scanning
+    function startQRCodeScanner() {
+        const qrReaderContainer = document.getElementById("qr-reader");
+
+        // Initialize QR code scanner
+        const html5QrCode = new Html5Qrcode("qr-reader");
+
+        // Start scanning QR code
+        html5QrCode.start(
+            { facingMode: "environment" },  // Use back camera for scanning
+            { fps: 10, qrbox: 250 },  // Set frames per second and size of scanning box
+            (decodedText) => {
+                // When QR code is successfully scanned, populate the email field
+                document.getElementById("studentEmail").value = decodedText;  // Fill the email input field
+
+                // Stop the scanner after successful scan
+                html5QrCode.stop().then(() => {
+                    console.log("QR Code scan stopped.");
+                    // Proceed to load courses after scanning
+                    loadStudentCourses();
+                }).catch((error) => {
+                    console.log("Error stopping scanner:", error);
+                });
+
+                // Hide the QR code scanner and show the attendance form
+                qrReaderContainer.style.display = "none";  // Hide QR scanner
+                document.getElementById("attendanceForm").style.display = "block";  // Show attendance form
+            },
+            (errorMessage) => {
+                console.log(errorMessage);  // Handle any scanning errors
+            }
+        ).catch((error) => {
+            console.log("Error starting QR scanner:", error);
+        });
+    }
+
+    // Function to close the QR scanner if needed
+    function closeQRCodeScanner() {
+        document.getElementById("qr-reader-container").style.display = "none";
+    }
+
+    // Function to fetch and display courses for the entered student email
+    function loadStudentCourses() {
+        const studentEmail = document.getElementById('studentEmail').value;
+
+        if (!studentEmail) {
+            alert('Please scan the QR code first.');
+            return;
+        }
+
+        // Fetch courses for the student
+        fetch(`/api/student/courses?email=${studentEmail}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                const coursesList = document.getElementById("coursesList");
+                coursesList.innerHTML = ''; // Clear previous courses
+
+                // Loop through each course and create the UI dynamically
+                data.forEach(course => {
+                    const courseElement = document.createElement("div");
+                    courseElement.innerHTML = `
+                        <input type="radio" name="course" value="${course.id}" id="course-${course.id}">
+                        <label for="course-${course.id}">${course.course_name} - ${course.teacher_name}</label>
+                        <button onclick="markAttendance(${course.id})" class="px-4 py-2 ml-4 text-white bg-green-500 rounded">Mark Attendance</button>
+                    `;
+                    coursesList.appendChild(courseElement);
+                });
+            });
+    }
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Function to mark attendance for a selected course
+    function markAttendance(courseId) {
+        fetch(`/api/attendance/mark/${courseId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken  // CSRF token for Laravel
+            },
+            body: JSON.stringify({})  // Request body (can be customized)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+            } else {
+                alert('Error marking attendance.');
+            }
+        });
+    }
+</script>
+
 
 
 
