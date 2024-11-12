@@ -86,3 +86,6 @@ Route::post('/enroll-course', [EnrollmentController::class, 'enrollInCourse']);
 Route::get('/view-enrolled-courses', [EnrollmentController::class, 'viewEnrolledCourses']);
 
 Route::get('/view-enrolled-courses-management', [EnrollmentController::class, 'viewEnrolledCoursesManagement']);
+
+
+Route::get('/api/enrollments', [EnrollmentController::class, 'getEnrollments']);

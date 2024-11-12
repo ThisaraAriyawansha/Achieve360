@@ -697,8 +697,6 @@ function showCourseAssignment() {
                     <h4 class="text-lg font-semibold text-gray-800">Course: ${course.course_name}</h4>
                     <p class="text-sm text-gray-600">Instructor: ${course.teacher_name}</p>
                     <p class="text-sm text-gray-500">Assigned on: ${new Date(course.assigned_at).toLocaleDateString()}</p>
-                    <p class="text-sm text-gray-400">Created at: ${new Date(course.created_at).toLocaleDateString()}</p>
-                    <p class="text-sm text-gray-400">Updated at: ${new Date(course.updated_at).toLocaleDateString()}</p>
                     <button onclick="deleteCourse(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-500 rounded-lg hover:bg-red-600">
                         Delete Course
                     </button>

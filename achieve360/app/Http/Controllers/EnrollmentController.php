@@ -49,6 +49,7 @@ class EnrollmentController extends Controller
         return response()->json($enrolledCourses);
     }
 
+
     public function viewEnrolledCoursesManagement(Request $request)
     {
         // Fetch all enrolled courses with the student's full name
@@ -64,6 +65,27 @@ class EnrollmentController extends Controller
         // Return the courses with full name of the student
         return response()->json($enrolledCourses);
     }
+    
+
+
+
+    public function getEnrollments(Request $request)
+    {
+        // Get the teacher's full name from the query parameter
+        $teacherName = $request->query('teacher_name');
+    
+        // Filter the enrollments based on the teacher's name
+        $enrollments = Enrollment::join('users', 'enrollments.student_email', '=', 'users.email')
+            ->select('enrollments.course_name', 'enrollments.teacher_name', 'enrollments.marks', 'enrollments.attendance_count', 'users.full_name')
+            ->where('enrollments.teacher_name', $teacherName) // Filter by teacher's name passed as query parameter
+            ->get();
+    
+        return response()->json($enrollments);
+    }
+    
+    
+    
+
     
     
 }

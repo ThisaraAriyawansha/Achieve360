@@ -18,6 +18,8 @@
             <nav class="flex-1 p-4 space-y-2 text-base">
                 <a href="#" onclick="showDashboard()" class="block px-4 py-2 transition-all duration-200 bg-blue-800 rounded-lg hover:bg-blue-700">Dashboard</a>
                 <button onclick="openRoleSelectionModal()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-blue-700 rounded-lg hover:bg-blue-600">Register</button>
+                <button onclick="showEnrollments()" class="block w-full px-4 py-2 mt-4 text-center transition-all duration-200 bg-green-700 rounded-lg hover:bg-green-600">View Enrollments</button> <!-- New Button -->
+
                 <a href="{{ route('login') }}" id="logout-link" class="block px-4 py-2 mt-4 text-center transition-all duration-200 bg-red-700 rounded-lg hover:bg-red-600">Logout</a>
             </nav>
         </aside>
@@ -52,6 +54,14 @@
                     <p class="mt-4 text-gray-700">Use the sidebar to navigate and manage registrations.</p>
                 </section>
 
+                <!-- Enrollment Details (Hidden by Default) -->
+                <section id="enrollments-section" class="hidden">
+                    <h3 class="mb-4 text-2xl font-semibold text-gray-800">Enrollments Details</h3>
+                    <div id="enrollments-table">
+                        <!-- Table content will be inserted here dynamically via JavaScript -->
+                    </div>
+                </section>
+                
                 <!-- Registration Form -->
                 <section id="registration-form" class="hidden">
                     <h3 id="form-title" class="mb-4 text-2xl font-semibold text-gray-800">Register</h3>
@@ -165,6 +175,57 @@
             }, 3000); // Show for 3 seconds
         }
     });
+
+
+ function showEnrollments() {
+    // Hide other sections
+    document.getElementById('dashboard-content').classList.add('hidden');
+    document.getElementById('registration-form').classList.add('hidden');
+
+    // Show enrollments section
+    document.getElementById('enrollments-section').classList.remove('hidden');
+
+    // Get the teacher's full name from session (or localStorage, depending on your setup)
+    const teacherName = '{{ session('full_name') }}'; // This will be replaced with the server-side value
+
+    // Fetch enrollment data from the server with teacher's name as query parameter
+    fetch(`/api/enrollments?teacher_name=${teacherName}`)  // Pass full_name as query parameter
+        .then(response => response.json())
+        .then(data => {
+            // Generate the enrollments table dynamically
+            const table = `
+                <table class="w-full border border-collapse border-gray-300 table-auto">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 border border-gray-300">Student Name</th>
+                            <th class="px-4 py-2 border border-gray-300">Course</th>
+                            <th class="px-4 py-2 border border-gray-300">Lecture Name</th>
+                            <th class="px-4 py-2 border border-gray-300">Attendance Count</th>
+                            <th class="px-4 py-2 border border-gray-300">Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(enrollment => `
+                            <tr>
+                                <td class="px-4 py-2 border border-gray-300">${enrollment.full_name}</td>
+                                <td class="px-4 py-2 border border-gray-300">${enrollment.course_name}</td>
+                                <td class="px-4 py-2 border border-gray-300">${enrollment.teacher_name}</td>
+                                <td class="px-4 py-2 border border-gray-300">${enrollment.attendance_count}</td>
+                                <td class="px-4 py-2 border border-gray-300">${enrollment.marks}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('enrollments-table').innerHTML = table;
+        })
+        .catch(error => {
+            console.error('Error fetching enrollment data:', error);
+            // Handle error (e.g., show a message to the user)
+        });
+}
+
+
     </script>
 </body>
 </html>
