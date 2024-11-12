@@ -83,9 +83,42 @@ class EnrollmentController extends Controller
         return response()->json($enrollments);
     }
     
-    
-    
 
+    public function getEnrollmentsMarks(Request $request)
+    {
+        // Get the teacher's full name from the query parameter
+        $teacherName = $request->query('teacher_name');
+        
+        // Filter the enrollments based on the teacher's name
+        $enrollments = Enrollment::join('users', 'enrollments.student_email', '=', 'users.email')
+            ->select('enrollments.course_name', 'enrollments.teacher_name', 'enrollments.marks', 'enrollments.attendance_count', 'users.full_name', 'enrollments.id')
+            ->where('enrollments.teacher_name', $teacherName) // Filter by teacher's name passed as query parameter
+            ->get();
+        
+        return response()->json($enrollments);
+    }
+    
+    public function updateMarks(Request $request, $id)
+    {
+        // Validate the input
+        $request->validate([
+            'marks' => 'required|numeric|min:0|max:100', // Adjust validation as needed
+        ]);
+        
+        // Find the enrollment by ID
+        $enrollment = Enrollment::findOrFail($id);
+        
+        // Update the marks
+        $enrollment->marks = $request->input('marks');
+        $enrollment->save();
+        
+        // Return a success response
+        return response()->json([
+            'message' => 'Marks updated successfully!',
+            'enrollment' => $enrollment
+        ]);
+    }
+    
     
     
 }
