@@ -221,13 +221,14 @@
     });
 
 
-    function showCourseManagement() {
+// Show course management page and fetch courses
+function showCourseManagement() {
+    // Hide other sections and display course management
     document.getElementById('dashboard-content').classList.add('hidden');
     document.getElementById('registration-form').classList.add('hidden');
     document.getElementById('course-registration-form').classList.add('hidden');
     document.getElementById('course-management').classList.remove('hidden');
     document.getElementById('course-assignment').classList.add('hidden');
-
 
     // Fetch courses from the server and display them
     fetch('/api/courses') // Assuming the endpoint to get courses is '/api/courses'
@@ -241,7 +242,7 @@
                 courseItem.innerHTML = `
                     <h4 class="text-xl font-semibold text-gray-800">${course.name}</h4>
                     <p class="mt-2 text-gray-600">${course.description}</p>
-                    <button onclick="deleteCourse(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
+                    <button onclick="deleteCourses(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
                 `;
                 courseList.appendChild(courseItem);
             });
@@ -251,7 +252,8 @@
         });
 }
 
-function deleteCourse(courseId) {
+// Delete course by ID
+function deleteCourses(courseId) {
     const confirmDelete = confirm('Are you sure you want to delete this course?');
     if (confirmDelete) {
         const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
@@ -280,6 +282,7 @@ function deleteCourse(courseId) {
 }
 
 
+
 function showCourseAssignment() {
     document.getElementById('dashboard-content').classList.add('hidden');
     document.getElementById('registration-form').classList.add('hidden');
@@ -301,8 +304,7 @@ function showCourseAssignment() {
                     <h4 class="text-lg font-semibold text-gray-800">Course: ${course.course_name}</h4>
                     <p class="text-sm text-gray-600">Instructor: ${course.teacher_name}</p>
                     <p class="text-sm text-gray-500">Assigned on: ${new Date(course.assigned_at).toLocaleDateString()}</p>
-                    <p class="text-sm text-gray-400">Created at: ${new Date(course.created_at).toLocaleDateString()}</p>
-                    <p class="text-sm text-gray-400">Updated at: ${new Date(course.updated_at).toLocaleDateString()}</p>
+
                     <button onclick="deleteCourse(${course.id})" class="px-4 py-2 mt-4 text-white bg-red-500 rounded-lg hover:bg-red-600">
                         Delete Course
                     </button>
