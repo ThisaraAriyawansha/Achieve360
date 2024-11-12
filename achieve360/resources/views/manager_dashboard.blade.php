@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -507,7 +508,6 @@ function deleteCourse(courseId) {
 
 
 function showviewEnrolledCourses() {
-    // Hide all sections by adding 'hidden' class
     const sectionsToHide = [
         'course-registration-form', 
         'assign-course-form', 
@@ -521,13 +521,10 @@ function showviewEnrolledCourses() {
         document.getElementById(section).classList.add('hidden');
     });
 
-    // Show the enrolled courses container after fetching data
     viewEnrolledCourses();
 }
 
-
 function viewEnrolledCourses() {
-    // Fetch data from server
     fetch('/view-enrolled-courses-management', {
         method: 'GET',
         headers: {
@@ -548,6 +545,7 @@ function viewEnrolledCourses() {
                                 <th class="px-6 py-3 text-sm font-medium text-gray-600">Marks</th>
                                 <th class="px-6 py-3 text-sm font-medium text-gray-600">Attendance</th>
                                 <th class="px-6 py-3 text-sm font-medium text-gray-600">Student Name</th>
+                                <th class="px-6 py-3 text-sm font-medium text-gray-600">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -556,7 +554,7 @@ function viewEnrolledCourses() {
         if (courses.error) {
             courseContent = `<p class="text-red-500">${courses.error}</p>`;
         } else {
-            courses.forEach(course => {
+            courses.forEach((course, index) => {
                 courseContent += `
                     <tr class="transition-colors duration-200 border-t hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-800">
@@ -589,6 +587,11 @@ function viewEnrolledCourses() {
                                 ${course.full_name}
                             </div>
                         </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            <button class="px-4 py-2 font-semibold text-white bg-blue-500 rounded generate-report-btn hover:bg-blue-600" data-course='${JSON.stringify(course)}'>
+                                Generate Report
+                            </button>
+                        </td>
                     </tr>
                 `;
             });
@@ -606,13 +609,102 @@ function viewEnrolledCourses() {
 
         // Show the 'enrolled-courses-container' now that the content is loaded
         document.getElementById('enrolled-courses-container').classList.remove('hidden');
-        document.getElementById('dashboard-content').classList.remove('hidden');  // Show the dashboard content section
+        document.getElementById('dashboard-content').classList.remove('hidden');
+
+        // Attach event listeners to each report button
+        document.querySelectorAll('.generate-report-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const course = JSON.parse(button.getAttribute('data-course'));
+                generateReport(course);
+            });
+        });
     })
     .catch(error => {
         console.error('Error fetching enrolled courses:', error);
         alert('There was an error fetching your enrolled courses.');
     });
 }
+
+// Function to generate a simple report PDF for a specific course
+// Function to generate a modern-looking report PDF in A4 landscape size for a specific course
+function generateReport(course) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape', 'mm', 'a4'); // Landscape orientation, millimeters as units, A4 size
+
+    // Define Colors
+    const primaryColor = [0, 123, 255]; // Blue
+    const secondaryColor = [100, 100, 100]; // Gray
+
+    // Set up the header
+    doc.setFillColor(...primaryColor);
+    doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24); // Increased font size for the header
+    doc.setFont('helvetica', 'bold');
+    doc.text('Course Report', 10, 20);
+
+    // Add Course Details Section
+    doc.setTextColor(...secondaryColor);
+    doc.setFontSize(16); // Increased font size for section titles
+    doc.setFont('helvetica', 'normal');
+
+    // Create a vertical space after the header
+    let yPos = 40;
+
+    // Add course information with customized styling
+    doc.setTextColor(...primaryColor);
+    doc.setFontSize(18); // Increased font size for course information title
+    doc.text('Course Information', 10, yPos);
+
+    yPos += 12; // Increased space after title
+
+    doc.setTextColor(...secondaryColor);
+    doc.setFontSize(14); // Increased font size for labels
+    doc.text(`Course Name: `, 10, yPos);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`${course.course_name}`, 60, yPos);
+
+    yPos += 10; // Increased spacing between fields
+
+    doc.setTextColor(...secondaryColor);
+    doc.text(`Lecturer Name: `, 10, yPos);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`${course.teacher_name}`, 60, yPos);
+
+    yPos += 10;
+
+    doc.setTextColor(...secondaryColor);
+    doc.text(`Student Name: `, 10, yPos);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`${course.full_name}`, 60, yPos);
+
+    yPos += 10;
+
+    doc.setTextColor(...secondaryColor);
+    doc.text(`Marks: `, 10, yPos);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`${course.marks}`, 60, yPos);
+
+    yPos += 10;
+
+    doc.setTextColor(...secondaryColor);
+    doc.text(`Attendance Count: `, 10, yPos);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`${course.attendance_count}`, 60, yPos);
+
+    yPos += 20; // Increased space before footer
+
+    // Add a footer
+    doc.setDrawColor(...primaryColor);
+    doc.line(10, yPos, doc.internal.pageSize.width - 10, yPos);
+    doc.setFontSize(12); // Increased footer font size
+    doc.setTextColor(...secondaryColor);
+    doc.text("Generated by ACHIEVE360 LMS System", 10, yPos + 10);
+
+    // Save the PDF
+    doc.save(`Course_Report_${course.course_name}.pdf`);
+}
+
 
 
         function showCourseRegistrationForm() {
