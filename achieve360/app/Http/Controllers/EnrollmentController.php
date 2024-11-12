@@ -120,5 +120,30 @@ class EnrollmentController extends Controller
     }
     
     
+    public function getStudentCourses(Request $request)
+    {
+        $email = $request->query('email');
+        
+        // Fetch courses for the given student email
+        $courses = Enrollment::where('student_email', $email)->get(['id', 'course_name', 'teacher_name']);
+        
+        if ($courses->isEmpty()) {
+            return response()->json(['error' => 'No enrolled courses found.']);
+        }
+        
+        return response()->json($courses);
+    }
+
+    public function markAttendance($courseId)
+    {
+        // Find the enrollment for the course and increment the attendance count
+        $enrollment = Enrollment::findOrFail($courseId);
+        $enrollment->attendance_count += 1;
+        $enrollment->save();
+        
+        return response()->json(['message' => 'Attendance marked successfully!']);
+    }
+
+
     
 }
