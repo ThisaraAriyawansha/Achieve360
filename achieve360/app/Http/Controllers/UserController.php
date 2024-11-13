@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse; 
 
 
 
@@ -43,6 +44,14 @@ public function updateStatus($id, Request $request)
     }
 }
 
-
+public function getRoleCounts(): JsonResponse
+{
+    return response()->json([
+        'studentsCount' => User::where('role', 'student')->count(),
+        'teachersCount' => User::where('role', 'teacher')->count(),
+        'adminsCount' => User::where('role', 'admin')->count(),
+        'managersCount' => User::where('role', 'manager')->count(),
+    ]);
+}
 
 }
