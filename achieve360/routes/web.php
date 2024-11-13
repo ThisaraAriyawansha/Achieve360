@@ -101,3 +101,5 @@ Route::post('/mark-attendance', [EnrollmentController::class, 'markAttendance'])
 
 Route::get('/api/student/courses', [EnrollmentController::class, 'getStudentCourses']);
 Route::post('/api/attendance/mark/{courseId}', [EnrollmentController::class, 'markAttendance']);
+
+Route::get('/role-counts', [UserController::class, 'getRoleCounts']);

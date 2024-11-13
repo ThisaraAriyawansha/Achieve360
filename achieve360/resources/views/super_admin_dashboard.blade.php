@@ -60,14 +60,64 @@
                 </div>
             @endif
 
-            <!-- Dynamic Content Area -->
-            <main class="flex-1 p-6 overflow-y-auto bg-gray-100">
-                <!-- Dashboard Content -->
-                <section id="dashboard-content" class="block">
-                    <h3 class="text-2xl font-semibold text-gray-800">Welcome to the Dashboard</h3>
-                    <p class="mt-4 text-gray-700">Use the sidebar to navigate and manage registrations.</p>
-                </section>
+            
+  <!-- Dynamic Content Area -->
+  <main class="flex-1 p-6 overflow-y-auto bg-gray-100">
+<!-- Dashboard Content -->
+<section id="dashboard-content" class="block">
+<h3 class="text-2xl font-semibold text-gray-800">Welcome to the Dashboard</h3>
+        <p class="mt-4 text-gray-700">Use the sidebar to navigate and manage registrations.</p>
+    <div id="role-counts" class="grid grid-cols-1 gap-6 mt-8 sm:grid-cols-2 lg:grid-cols-4">
 
+        <!-- Students Card -->
+        <div class="p-6 transition duration-300 transform rounded-lg shadow-lg bg-gradient-to-br from-blue-100 to-blue-200 hover:scale-105">
+            <div class="flex items-center space-x-4">
+                <i class="text-blue-600 fas fa-user-graduate fa-2x"></i>
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800">Students</h4>
+                    <p id="studentsCount" class="mt-2 text-3xl font-bold text-blue-700 animate-pulse">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teachers Card -->
+        <div class="p-6 transition duration-300 transform rounded-lg shadow-lg bg-gradient-to-br from-green-100 to-green-200 hover:scale-105">
+            <div class="flex items-center space-x-4">
+                <i class="text-green-600 fas fa-chalkboard-teacher fa-2x"></i>
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800">Teachers</h4>
+                    <p id="teachersCount" class="mt-2 text-3xl font-bold text-green-700 animate-pulse">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admins Card -->
+        <div class="p-6 transition duration-300 transform rounded-lg shadow-lg bg-gradient-to-br from-purple-100 to-purple-200 hover:scale-105">
+            <div class="flex items-center space-x-4">
+                <i class="text-purple-600 fas fa-user-shield fa-2x"></i>
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800">Admins</h4>
+                    <p id="adminsCount" class="mt-2 text-3xl font-bold text-purple-700 animate-pulse">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Managers Card -->
+        <div class="p-6 transition duration-300 transform rounded-lg shadow-lg bg-gradient-to-br from-yellow-100 to-yellow-200 hover:scale-105">
+            <div class="flex items-center space-x-4">
+                <i class="text-yellow-600 fas fa-user-tie fa-2x"></i>
+                <div>
+                    <h4 class="text-lg font-semibold text-gray-800">Managers</h4>
+                    <p id="managersCount" class="mt-2 text-3xl font-bold text-yellow-700 animate-pulse">Loading...</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+
+                
 
               <!-- Course Registration Form -->
                  <section id="course-registration-form" class="hidden">
@@ -328,6 +378,7 @@
             document.getElementById('course-assignment').classList.add('hidden');
             document.getElementById('enrolled-courses-container').classList.add('hidden');
             hideAllSections();
+            fetchRoleCounts();
             
 
         }
@@ -859,6 +910,28 @@ function viewEnrolledCourses() {
             }, 3000); // Show for 3 seconds
         }
     });
+
+
+
+    function fetchRoleCounts() {
+        fetch('/role-counts')
+            .then(response => response.json())
+            .then(data => {
+                // Populate role counts in the DOM
+                document.getElementById('studentsCount').textContent = data.studentsCount;
+                document.getElementById('teachersCount').textContent = data.teachersCount;
+                document.getElementById('adminsCount').textContent = data.adminsCount;
+                document.getElementById('managersCount').textContent = data.managersCount;
+            })
+            .catch(error => {
+                console.error('Error fetching role counts:', error);
+                alert('Failed to load role counts.');
+            });
+    }
+
+
+    document.addEventListener('DOMContentLoaded', fetchRoleCounts);
+
 
 
     </script>
