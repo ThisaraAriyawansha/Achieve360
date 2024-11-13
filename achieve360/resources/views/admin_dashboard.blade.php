@@ -161,6 +161,8 @@
             document.getElementById('registration-form').classList.add('hidden');
             document.getElementById('course-management').classList.add('hidden');
             document.getElementById('course-assignment').classList.add('hidden');
+            document.getElementById("attendanceForm").style.display = "none";
+
 
         }
 
@@ -417,7 +419,12 @@ function showAttendanceManagement() {
 
                 // Hide the QR code scanner and show the attendance form
                 qrReaderContainer.style.display = "none";  // Hide QR scanner
-                document.getElementById("attendanceForm").style.display = "block";  // Show attendance form
+                document.getElementById('course-registration-form').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('course-management').classList.add('hidden');
+            document.getElementById('course-assignment').classList.add('hidden');
+                document.getElementById("attendanceForm").style.display = "block";  
             },
             (errorMessage) => {
                 console.log(errorMessage);  // Handle any scanning errors
@@ -497,6 +504,8 @@ function showAttendanceManagement() {
 
             document.getElementById('course-management').classList.add('hidden');
             document.getElementById('course-assignment').classList.add('hidden');
+            document.getElementById("attendanceForm").style.display = "none";
+
 
     // Show the enrolled courses container after fetching data
     viewEnrolledCourses();
